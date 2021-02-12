@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a16c3c541bd99241cab1c21ce8e83ac",
+    "content-hash": "4623f23d49f13036650abf54fbd64cfb",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1689,6 +1689,45 @@
                 "source": "https://github.com/opis/closure/tree/3.6.1"
             },
             "time": "2020-11-07T02:01:34+00:00"
+        },
+        {
+            "name": "philcook/gtmetrix",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/philcook/php-gtmetrix.git",
+                "reference": "9a5c61449a0a42bc77188e752909608548cf292f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/philcook/php-gtmetrix/zipball/9a5c61449a0a42bc77188e752909608548cf292f",
+                "reference": "9a5c61449a0a42bc77188e752909608548cf292f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "apigen/apigen": "~4.1",
+                "phing/phing": "~2.11",
+                "phpunit/phpunit": "~4.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Entrecore\\GTMetrixClient\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "GTMetrix API client for PHP",
+            "support": {
+                "source": "https://github.com/philcook/php-gtmetrix/tree/master"
+            },
+            "time": "2018-05-25T20:33:17+00:00"
         },
         {
             "name": "phpoption/phpoption",
