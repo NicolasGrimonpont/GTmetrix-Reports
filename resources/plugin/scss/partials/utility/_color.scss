@@ -1,0 +1,71 @@
+//----------------------------------------------------/
+// Background color
+//----------------------------------------------------/
+.bg-gray {
+    background-color: $color-bg-gray;
+}
+
+//----------------------------------------------------/
+// Pale background
+//----------------------------------------------------/
+@each $color, $value in $pale-colors {
+    .bg-pale-#{$color} {
+        background-color: $value !important;
+    }
+}
+
+//----------------------------------------------------/
+// Gradient background
+//----------------------------------------------------/
+@each $color, $value in $gradient-colors {
+    .bg-gradient-#{$color} {
+        background-image: $value !important;
+    }
+}
+
+//----------------------------------------------------/
+// Text color
+//----------------------------------------------------/
+@include text-color-variant(".text-default", $color-text);
+@include text-color-variant(".text-light", $color-text-light);
+@include text-color-variant(".text-lighter", $color-text-lighter);
+@include text-color-variant(".text-lightest", $color-text-lightest);
+
+.text-inherit {
+    color: inherit;
+}
+
+//----------------------------------------------------/
+// Swatch color
+//----------------------------------------------------/
+.swatch {
+    display: inline-block;
+    background: #ddd;
+    border-radius: 50%;
+    @extend .swatch-md;
+}
+
+.swatch-xs {
+    width: 1rem;
+    height: 1rem;
+}
+
+.swatch-sm {
+    width: 2rem;
+    height: 2rem;
+}
+
+.swatch-md {
+    width: 2.7rem;
+    height: 2.7rem;
+}
+
+.swatch-lg {
+    width: 4rem;
+    height: 4rem;
+}
+
+.swatch-xl {
+    width: 5rem;
+    height: 5rem;
+}

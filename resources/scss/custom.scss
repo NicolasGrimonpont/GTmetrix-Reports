@@ -1,0 +1,51 @@
+// Intro animation
+.cover-blocks {
+    a {
+        position: absolute;
+
+        &:nth-child(1) {
+            -webkit-animation: wobble 4s infinite;
+            animation: wobble 4s infinite;
+            max-width: 400px;
+            right: 20vw;
+            bottom: 30vh;
+        }
+
+        img {
+            border-radius: 0.25rem;
+
+            &.aos-animate {
+                opacity: 0.7 !important;
+            }
+
+            &:hover {
+                opacity: 1 !important;
+                transition: 0.7s !important;
+            }
+        }
+    }
+}
+
+@-webkit-keyframes wobble {
+    0% {
+        transform: rotate(-1deg) translate(-5px, -5px);
+    }
+    50% {
+        transform: rotate(1deg) translate(5px, 5px);
+    }
+    100% {
+        transform: rotate(-1deg) translate(-5px, -5px);
+    }
+}
+
+@keyframes wobble {
+    0% {
+        transform: rotate(-1deg) translate(-5px, -5px);
+    }
+    50% {
+        transform: rotate(1deg) translate(5px, 5px);
+    }
+    100% {
+        transform: rotate(-1deg) translate(-5px, -5px);
+    }
+}
