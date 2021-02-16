@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Home;
 use App\Http\Controllers\Gtmetrix;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +16,11 @@ use App\Http\Controllers\Gtmetrix;
 |
 */
 
-Route::get('/', [Gtmetrix::class, 'index']);
+// Homepage
+Route::get('/', [Home::class, 'index']);
+
+// Reports
+Route::get('/reports', [Gtmetrix::class, 'index'])->middleware(['auth'])->name('reports');
+Route::post('/reports', [Gtmetrix::class, 'upload'])->middleware(['auth'])->name('reports');
+
+require __DIR__ . '/auth.php';
