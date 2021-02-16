@@ -23,7 +23,7 @@ class Gtmetrix extends Controller
         // Get tested domains from the database
         $domains = $this->getDomainsFromDatabase();
 
-        return view('frontend/pages/homepage', compact('domains'));
+        return view('frontend/pages/reports', compact('domains'));
     }
 
 
@@ -110,12 +110,13 @@ class Gtmetrix extends Controller
         return DB::table('sites')
             ->updateOrInsert(
                 [
-                'site' => trim($site)
+                    'site' => trim($site)
                 ],
                 [
-                    'gt_id' => $result->getId(),
+                    'gt_id' => is_null($result->getId()),
                     'poll_state_url' => $result->getpollStateUrl(),
                     'state' => $result->getstate(),
+                    'error' => (!empty($result->getError())) ? $result->getError() : null,
                     'report_url' => $result->getreportUrl(),
                     'pagespeed_score' => $result->getpagespeedScore(),
                     'yslow_score' => $result->getyslowScore(),
@@ -135,13 +136,13 @@ class Gtmetrix extends Controller
                     'onload_duration' => $result->getonloadDuration(),
                     'fully_loaded_time' => $result->getfullyLoadedTime(),
                     'rum_speed_index' => $result->getrumSpeedIndex(),
-                    'report_pdf' => $ressources['report_pdf'],
-                    'pagespeed' => $ressources['pagespeed'],
-                    'har' => $ressources['har'],
-                    'pagespeed_files' => $ressources['pagespeed_files'],
-                    'report_pdf_full' => $ressources['report_pdf_full'],
-                    'yslow' => $ressources['yslow'],
-                    'screenshot' => $ressources['screenshot'],
+                    'report_pdf' => (!empty($ressources)) ? $ressources['report_pdf'] : null,
+                    'pagespeed' => (!empty($ressources)) ? $ressources['pagespeed'] : null,
+                    'har' => (!empty($ressources)) ? $ressources['har'] : null,
+                    'pagespeed_files' => (!empty($ressources)) ? $ressources['pagespeed_files'] : null,
+                    'report_pdf_full' => (!empty($ressources)) ? $ressources['report_pdf_full'] : null,
+                    'yslow' => (!empty($ressources)) ? $ressources['yslow'] : null,
+                    'screenshot' => (!empty($ressources)) ? $ressources['screenshot'] : null,
                     'updated_at' => \Carbon\Carbon::now()
                 ]
             );
