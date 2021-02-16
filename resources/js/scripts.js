@@ -22,18 +22,19 @@ require('../plugin/js/loaders/core.js');
 | know how much KB you can save by removing a vendor.
 |
 */
-require('../plugin/js/vendors/aos.js');            // 14 kb
-require('../plugin/js/vendors/constellation.js');  // 03 kb
+// require('../plugin/js/vendors/aos.js');            // 14 kb
+// require('../plugin/js/vendors/constellation.js');  // 03 kb
 // require('../plugin/js/vendors/countdown.js');   // 05 kb
 // require('../plugin/js/vendors/countup.js');     // 13 kb
 // require('../plugin/js/vendors/granim.js');      // 15 kb
 // require('../plugin/js/vendors/jarallax.js');    // 23 kb
-require('../plugin/js/vendors/lity.js');           // 07 kb
+// require('../plugin/js/vendors/lity.js');           // 07 kb
 // require('../plugin/js/vendors/photoswipe.js');  // 45 kb
 // require('../plugin/js/vendors/shuffle.js');     // 25 kb
-require('../plugin/js/vendors/slick.js');          // 43 kb
-require('../plugin/js/vendors/typed.js');          // 11 kb
-require('../plugin/js/vendors/colorthief.js');     // 7 kb
+// require('../plugin/js/vendors/slick.js');          // 43 kb
+// require('../plugin/js/vendors/typed.js');          // 11 kb
+// require('../plugin/js/vendors/colorthief.js');     // 7 kb
+require('../plugin/js/vendors/datatables.js');
 
 /*
 |--------------------------------------------------------------------------
