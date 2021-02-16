@@ -1,0 +1,12 @@
+// Import the plugin style.
+//
+@import "~datatables.net-bs4/css/dataTables.bootstrap4.css";
+@import "~datatables.net-buttons-bs4/css/buttons.bootstrap4";
+
+.dataTables_paginate {
+    .previous a,
+    .next a {
+        padding-left: 0.7rem !important;
+        padding-right: 0.7rem !important;
+    }
+}
