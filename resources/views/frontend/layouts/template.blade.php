@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     {{-- Title Section --}}
-    <title>@yield('title', $page_title ?? 'Gtmetrix Reports')</title>
+    <title>{{ config('app.name') }} - @yield('title')</title>
     {{-- Meta Data --}}
     <meta name="description" content="@yield('page_description', $page_description ?? '')" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -16,11 +16,11 @@
 
 <body>
 
-    @include('frontend.layout.partial.header')
+    @include('frontend.layouts.partial.header')
 
     @yield('content')
 
-    @include('frontend.layout.partial.footer')
+    @include('frontend.layouts.partial.footer')
 
     {{-- Global JS --}}
     <script src="{{ asset('js/app.js') }}" type="text/javascript"></script>
