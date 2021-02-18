@@ -131,6 +131,19 @@ class Monitoring extends Controller
 
 
     /**
+     * Delete website and all datas related
+     *
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function deleteWebsite($id)
+    {
+        DB::table('sites')->where('id', '=', $id)->delete();
+        DB::table('monitoring')->where('site_id', '=', $id)->delete();
+        return back();
+    }
+
+
+    /**
      * Request to GTmetrix API
      *
      * @param  \Illuminate\Http\Request
@@ -166,6 +179,9 @@ class Monitoring extends Controller
         }
         return $test;
     }
+
+
+
 
 
     /**
