@@ -4,17 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-
-use Entrecore\GTMetrixClient\GTMetrixClient;
-use Entrecore\GTMetrixClient\GTMetrixTest;
-
 class Home extends Controller
 {
 
     /**
-     * Show the homepage
+     * Show the page
      *
      * @return \Illuminate\View\View
      */
