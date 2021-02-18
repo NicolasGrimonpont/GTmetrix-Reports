@@ -141,7 +141,7 @@ class Reports extends Controller
 
             $client->getLocations();
             $client->getBrowsers();
-            $test = $client->startTest(trim($site));
+            $test = $client->startTest(trim($site), '4');
 
             //Wait for result
             while (

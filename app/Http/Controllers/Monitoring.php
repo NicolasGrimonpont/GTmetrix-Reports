@@ -161,7 +161,7 @@ class Monitoring extends Controller
 
             $client->getLocations();
             $client->getBrowsers();
-            $test = $client->startTest(trim($site->site));
+            $test = $client->startTest(trim($site->site), '4');
 
             //Wait for result
             while (

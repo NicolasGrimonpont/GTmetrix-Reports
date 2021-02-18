@@ -4,5 +4,7 @@
 * Cross site scripting
 * Password hash
 * Encrypted API key
-* Email validation
-* IP verification
+* IP for check access
+* Email company validation
+* Send email validation
+* Settings protected by password after inactivity
