@@ -156,13 +156,17 @@
                     $('#message').text('Testing domains.. Please wait !!').show();
                 },
                 success: function(response) {
-                    debugger
                     $('.alert-danger').hide();
                     $('input[type="file"]').val('');
-                    $('#message').text(response).show();
+                    if (response.error) {
+                        $('#message').text(response.error).show();
+                    } else {
+                        $('#message').text(response).show();
+                    }
                 },
                 error: function(response) {
-                    $('#message').text(response).show();
+                    $('#message').text('Error').show();
+                    console.log(response.responseJSON.message);
                 }
             });
         });

@@ -46,13 +46,13 @@ class Reports extends Controller
             // Decrypt GTmetrix API key
             if (!$gt_api = $this->decryptApiKey($gt_credentials->gt_api)) {
                 Log::error("Error decrypting the API key");
-                return response()->json('error', 'Issue with API credentials, please contact an admin');
+                return response()->json(['error' => 'Issue with API credentials, please contact an admin']);
             }
         }
 
         // Check if datas for API are empty
         if (empty($gt_email) || empty($gt_api)) {
-            return response()->json('error', 'Issue with API credentials, please verify your credentials on settings');
+            return response()->json(['error' => 'Issue with API credentials, please verify your credentials on settings']);
         }
 
         // File validation
@@ -71,11 +71,11 @@ class Reports extends Controller
                 // Add result datas requested to database
                 if (!$this->addResultToDatabase($site, $result)) {
                     Log::error("Error to record the datas on the database");
-                    return response()->json('error', 'Issue with your request');
+                    return response()->json(['error' => 'Issue with your request']);
                 }
             } else {
                 Log::error("The GTmetrix request don't work properly");
-                return response()->json('error', 'Issue when requesting GTmetrix API');
+                return response()->json(['error' => 'Issue when requesting GTmetrix API']);
             }
         }
         return response()->json('success');
