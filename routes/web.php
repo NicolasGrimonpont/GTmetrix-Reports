@@ -35,8 +35,7 @@ Route::get('/monitoring/{id}', [Monitoring::class, 'index'], function ($id) {
 })->middleware(['auth'])->name('monitoring');
 
 // Settings
-Route::get('/settings', [Settings::class, 'settings'])->middleware(['auth'])->middleware(['password.confirm'])->name('settings');
-// Route::get('/settings', [Settings::class, 'settings'])->middleware(['auth'])->middleware(['password.confirm'])->middleware('verified')->name('settings');
+Route::get('/settings', [Settings::class, 'settings'])->middleware(['auth'])->middleware(['password.confirm'])->middleware('verified')->name('settings');
 Route::post('/settings', [Settings::class, 'settingFormValidation'])->middleware(['auth'])->name('settings');
 
 Route::get('/settings/monitoring', [Settings::class, 'monitoring'])->middleware(['auth'])->name('monitoring');
