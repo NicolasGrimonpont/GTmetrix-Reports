@@ -14,7 +14,7 @@
             <nav class="nav nav-navbar mr-auto">
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/reports') }}"
+                        <a href="{{ url('/') }}"
                             class="nav-link {{ request()->is('reports') ? 'active' : '' }}">Reports</a>
                     @endauth
                 @endif
