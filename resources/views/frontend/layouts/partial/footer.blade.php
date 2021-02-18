@@ -16,7 +16,7 @@
 
             <div class="col-6 col-lg-6 text-right order-lg-last">
                 <div class="nav nav-bold nav-uppercase nav-trim justify-content-lg-end">
-                   {{ (env('APP_DEBUG')) ? 'Development' : 'Production' }} | Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
+                   {{ (env('APP_DEBUG')) ? 'Development' : 'Production' }}
                 </div>
             </div>
 

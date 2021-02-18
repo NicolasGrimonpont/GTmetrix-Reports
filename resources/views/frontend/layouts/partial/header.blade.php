@@ -5,7 +5,7 @@
         <div class="navbar-left">
             <button class="navbar-toggler" type="button"><span class="navbar-toggler-icon"></span></button>
             <a class="navbar-brand text-muted fw-600" href="{{ url('/') }}">GTmetrix</a>
-            {{-- <span class="navbar-divider"></span> --}}
+            <span class="navbar-divider"></span>
 
         </div>
 
@@ -24,6 +24,7 @@
             @if (Route::has('login'))
                 @auth
                     @if (request()->is('/'))
+                        <div id="message" class="mr-5"></div>
                         <a href="#" class="btn btn-sm btn-round btn-primary mr-4" data-toggle="modal"
                             data-target="#modal">Upload</a>
                     @endif

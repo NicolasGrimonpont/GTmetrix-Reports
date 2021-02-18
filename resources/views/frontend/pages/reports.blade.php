@@ -21,7 +21,7 @@
                                     <th>#</th>
                                     <th>Screenshot</th>
                                     <th>Site</th>
-                                    <th>state</th>
+                                    <th>State</th>
                                     <th>Pagespeed</th>
                                     <th>Yslow</th>
                                     <th>HTML bytes</th>
@@ -136,28 +136,6 @@
     </div>
     {{-- ./Modal --}}
 
-    {{-- Notification --}}
-    {{-- <div id="popup-slide-up" class="popup col-6 col-md-4" data-animation="slide-up" data-autoshow="1000"
-        data-position="bottom-right">
-        <button type="button" class="close" data-dismiss="popup" aria-label="Close">
-            <span aria-hidden="true">×</span>
-        </button>
-        <div class="media">
-            <img class="avatar mr-5" src="{{ asset('storage/avatar/1.jpg') }}" alt="avatar">
-            <div class="media-body">
-                <h5>Welcome {{ Auth::user()->name }} !</h5>
-                <p>We'd like to welcome you to our website and hope you have a great time using our services.</p>
-                <p>First of all you should be sure you confirm your email in order to use all our features. If this has not
-                    been done, please check your mailbox and click the link provided in the mail we sent you.</p>
-                <p>If you are ready to start, click on the welcome menu on the top of the page and beggin
-                    creating or joining a company to share your datas with all your team.</p>
-                <p class="mb-0">Finally and if you are the owner of the company, think to link this account to GTmetrix using your API
-                    key. You don't know how to do that ? <a href="https://gtmetrix.com/api/" target="_blank">Click here</a> !</p>
-            </div>
-        </div>
-    </div> --}}
-    {{-- ./Notification --}}
-
 @endsection
 {{-- ./Content --}}
 
@@ -173,16 +151,18 @@
                 contentType: false,
                 cache: false,
                 processData: false,
-                success: function(response) {
-                    $('.alert-danger').hide();
+                beforeSend: function(msg) {
                     $('.modal-body .close').click();
+                    $('#message').text('Testing domains.. Please wait !!').show();
+                },
+                success: function(response) {
+                    debugger
+                    $('.alert-danger').hide();
                     $('input[type="file"]').val('');
+                    $('#message').text(response).show();
                 },
                 error: function(response) {
-                    var error = response.responseJSON.errors;
-                    if (error.file) {
-                        $('.alert-danger').text(error.file).show();
-                    }
+                    $('#message').text(response).show();
                 }
             });
         });

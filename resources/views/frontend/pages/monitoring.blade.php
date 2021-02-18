@@ -22,6 +22,7 @@
                                     <th>Monitoring</th>
                                     <th>State</th>
                                     <th>Last update</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,6 +47,12 @@
                                         <td data-toggle="tooltip" data-placement="right" title="{{ $domain->error }}">
                                             {{ $domain->state }}</td>
                                         <td>{{ date('M j, Y', strtotime($domain->updated_at)) }}</td>
+                                        <td>
+                                            <a href="{{ url('monitoring/delete', $domain->id) }}" data-toggle="tooltip"
+                                                data-placement="top" title="Delete websites and all datas related !!">
+                                                <i class="fa fa-remove text-danger"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
