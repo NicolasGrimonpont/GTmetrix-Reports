@@ -42,11 +42,6 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'custom' => [
-                'email' => [
-                    'ends_with:tavanoteam.com' => 'Your email have to be provided by Tavanoteam.'
-                ],
-            ],
         ]));
 
         event(new Registered($user));
