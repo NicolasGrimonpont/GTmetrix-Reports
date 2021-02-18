@@ -34,6 +34,10 @@ Route::get('/monitoring/{id}', [Monitoring::class, 'index'], function ($id) {
     return 'id ' . $id;
 })->middleware(['auth'])->name('monitoring');
 
+Route::get('/monitoring/delete/{id}', [Monitoring::class, 'deleteWebsite'], function ($id) {
+    return 'id ' . $id;
+})->middleware(['auth'])->name('monitoring');
+
 // Settings
 Route::get('/settings', [Settings::class, 'settings'])->middleware(['auth'])->middleware(['password.confirm'])->middleware('verified')->name('settings');
 Route::post('/settings', [Settings::class, 'settingFormValidation'])->middleware(['auth'])->name('settings');
