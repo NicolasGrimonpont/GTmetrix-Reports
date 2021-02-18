@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSitesTable extends Migration
+class CreateMonitoringTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateSitesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sites', function (Blueprint $table) {
+        Schema::create('monitoring', function (Blueprint $table) {
             $table->id();
-            $table->string('site', '100')->unique();
+            $table->integer('site_id');
+            $table->string('site', '100');
             $table->boolean('monitoring')->nullable();
             $table->string('gt_id', '20')->nullable();
             $table->string('poll_state_url', '200')->nullable();
@@ -59,6 +60,6 @@ class CreateSitesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sites');
+        Schema::dropIfExists('monitoring');
     }
 }

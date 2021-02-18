@@ -5,7 +5,7 @@
         <div class="navbar-left">
             <button class="navbar-toggler" type="button"><span class="navbar-toggler-icon"></span></button>
             <a class="navbar-brand text-muted fw-600" href="{{ url('/') }}">GTmetrix</a>
-            <span class="navbar-divider"></span>
+            {{-- <span class="navbar-divider"></span> --}}
 
         </div>
 
@@ -14,15 +14,16 @@
             <nav class="nav nav-navbar mr-auto">
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/reports') }}"
-                            class="nav-link {{ request()->is('reports') ? 'active' : '' }}">Reports</a>
+                        {{-- <a href="{{ url('/reports') }}"
+                            class="nav-link {{ request()->is('reports') ? 'active' : '' }}">Reports</a> --}}
                     @endauth
                 @endif
             </nav>
 
+            {{-- Login --}}
             @if (Route::has('login'))
                 @auth
-                    @if (request()->is('reports'))
+                    @if (request()->is('/'))
                         <a href="#" class="btn btn-sm btn-round btn-primary mr-4" data-toggle="modal"
                             data-target="#modal">Upload</a>
                     @endif
@@ -37,13 +38,19 @@
                     </div>
                 @endauth
             @endif
+            {{-- ./Login --}}
+
             <span class="navbar-divider"></span>
+
+            {{-- Welcome --}}
             @if (Route::has('login'))
                 @auth
                     <ul class="nav nav-navbar">
                         <li class="nav-item">
                             <a class="nav-link" href="#">Welcome {{ Auth::user()->name }} <span class="arrow"></span></a>
                             <nav class="nav align-right">
+                                <a href="{{ route('monitoring') }}" class="nav-link">Monitoring</a>
+                                <a href="{{ route('settings') }}" class="nav-link">Settings</a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <a href="{{ route('logout') }}" class="nav-link"
@@ -54,6 +61,7 @@
                     </ul>
                 @endauth
             @endif
+            {{-- ./Welcome --}}
 
         </section>
 

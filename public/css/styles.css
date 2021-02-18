@@ -16253,6 +16253,53 @@ div.dt-buttons a.btn.processing:after {
   padding-right: 0.7rem !important;
 }
 
+.dataTable .vertical-align {
+  vertical-align: middle;
+}
+
+.dataTables_length .custom-select {
+  line-height: 1;
+}
+
+.dt-button-collection .dropdown-menu {
+  -moz-columns: 1;
+       columns: 1;
+}
+@media (min-width: 500px) {
+  .dt-button-collection .dropdown-menu {
+    -moz-columns: 2;
+         columns: 2;
+  }
+}
+@media (min-width: 720px) {
+  .dt-button-collection .dropdown-menu {
+    -moz-columns: 3;
+         columns: 3;
+  }
+}
+@media (min-width: 1000px) {
+  .dt-button-collection .dropdown-menu {
+    -moz-columns: 4;
+         columns: 4;
+  }
+}
+@media (min-width: 1170px) {
+  .dt-button-collection .dropdown-menu {
+    -moz-columns: 5;
+         columns: 5;
+  }
+}
+.dt-button-collection .buttons-columnVisibility {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  border-radius: 3px !important;
+  margin-bottom: 10px;
+}
+.dt-button-collection .buttons-columnVisibility:hover {
+  background: #50a1ff !important;
+  color: white !important;
+}
+
 a {
   color: #50a1ff;
   transition: 0.2s linear;

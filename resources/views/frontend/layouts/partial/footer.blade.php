@@ -7,15 +7,18 @@
                 <a href="{{ url('/') }}" class="text-muted fw-600">GTmetrix</a>
             </div>
 
-            <div class="col-6 col-lg-6 text-right order-lg-last">
-            </div>
-
-            {{-- <div class="col-lg-6">
+            {{-- <div class="col-lg-4">
                 <div class="nav nav-bold nav-uppercase nav-trim justify-content-lg-center">
                     <a class="nav-link" href="#">How it works</a>
                     <a class="nav-link" href="#">Contact Us</a>
                 </div>
             </div> --}}
+
+            <div class="col-6 col-lg-6 text-right order-lg-last">
+                <div class="nav nav-bold nav-uppercase nav-trim justify-content-lg-end">
+                   {{ (env('APP_DEBUG')) ? 'Development' : 'Production' }} | Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
+                </div>
+            </div>
 
         </div>
     </div>

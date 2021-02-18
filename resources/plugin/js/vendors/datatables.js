@@ -26,7 +26,7 @@ require('datatables.net-buttons/js/buttons.print.js')();  // Print view button
     page.registerVendor('Datatables');
 
     page.initDatatables = function () {
-        $('[data-provide~="datatables"]').each(function () {
+        $('[data-provide~="datatables-full"]').each(function () {
 
             // Custom with some options
             var table = $(this).DataTable({
@@ -40,13 +40,20 @@ require('datatables.net-buttons/js/buttons.print.js')();  // Print view button
                 ],
                 columnDefs: [
                     {
-                        "targets": [0, 2, 3, 4, 7, 9, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22, 24, 25, 26, 27, 28, 29, 30],
+                        "targets": [0, 1, 3, 6, 7, 8, 10, 12, 13, 15, 16, 17, 18, 19, 21],
                         "visible": false
                     }
                 ],
                 lengthMenu: [[10, 25, 50, 100, 250, 500, -1], [10, 25, 50, 100, 250, 500, "All"]]
             });
+        });
+        $('[data-provide~="datatables"]').each(function () {
 
+            // Custom with some options
+            var table = $(this).DataTable({
+                dom: 'frltip',
+                lengthMenu: [[10, 25, 50, 100, 250, 500, -1], [10, 25, 50, 100, 250, 500, "All"]]
+            });
         });
     }
 }(jQuery);
