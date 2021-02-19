@@ -12,7 +12,7 @@
         <section class="section">
             <div class="container">
                 <header class="section-header">
-                    <h2>Settings</h2>
+                    <h1 class="display-4">Settings</h1>
                     <hr>
                     <p class="lead">Configure your account</p>
                 </header>
