@@ -3,8 +3,18 @@
 
 @section('title', 'Upload')
 
-    {{-- Content --}}
+{{-- Content --}}
 @section('content')
+
+    {{-- Header --}}
+    <header class="header pb-0">
+        <div class="container">
+            <h1 class="display-4">Company</h1>
+            <p class="lead-2">Configuration of websites of the company</p>
+        </div>
+    </header>
+    {{-- /.header --}}
+
 
     {{-- Main Content --}}
     <main class="main-content">
