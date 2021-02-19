@@ -21,7 +21,32 @@ class Settings extends Controller
      */
     public function company()
     {
-        return view('frontend/pages/settings/company');
+        $user = Auth::user();
+
+        $company = new Settings();
+        $company->gt_email = null;
+        $company->gt_api = null;
+        $company->gt_location = null;
+
+        if ($user->company_id) {
+
+            if ($company = $this->getCompanyFromDatabase($user->company_id)) {
+
+                // Get Gtmetrix settings from database
+                if ($company->gt_api) {
+
+                    // Decryption of API key
+                    try {
+                        $company->gt_api = Crypt::decryptString($company->gt_api);
+                    } catch (DecryptException $e) {
+                        report($e);
+                        $company->gt_api = null;
+                    }
+                }
+            }
+        }
+
+        return view('frontend/pages/settings/company', compact('company'));
     }
 
 
@@ -33,6 +58,47 @@ class Settings extends Controller
     public function getCompanyFromDatabase($id)
     {
         return DB::table('company')->where('id', $id)->first();
+    }
+
+
+    /**
+     * Receive post value from from form
+     *
+     * @param  \Illuminate\Http\Request
+     */
+    public function companyFormValidation(Request $request)
+    {
+        $validated = $request->validate([
+            'gt_email' => 'nullable|email|max:255',
+            'gt_api' => 'nullable|max:255',
+            'gt_location' => 'nullable|max:255'
+        ]);
+
+        $user = Auth::user();
+
+        // Updating company datas
+        if ($user->company_id) {
+            $this->updateCompanyDatasToDatabse($validated, $user->company_id);
+        }
+
+        return back()->with('success', 'Company updated.');
+    }
+
+
+    /**
+     * Update company info to the database
+     *
+     * @param  \Illuminate\Http\Request $data
+     * @param  integer $id
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function updateCompanyDatasToDatabse($data, $id)
+    {
+        return DB::table('company')->where('id', $id)->update([
+            'gt_email' => $data['gt_email'],
+            'gt_api' => Crypt::encryptString($data['gt_api']),
+            'gt_location' => $data['gt_location']
+        ]);
     }
 
 
@@ -139,29 +205,7 @@ class Settings extends Controller
     {
         $user = Auth::user();
 
-        $company = new Settings();
-        $company->gt_email = null;
-        $company->gt_api = null;
-        $company->gt_location = null;
-
-        if ($user->company_id) {
-
-            if ($company = $this->getCompanyFromDatabase($user->company_id)) {
-
-                // Get Gtmetrix settings from database
-                if ($company->gt_api) {
-
-                    // Decryption of API key
-                    try {
-                        $company->gt_api = Crypt::decryptString($company->gt_api);
-                    } catch (DecryptException $e) {
-                        report($e);
-                        $company->gt_api = null;
-                    }
-                }
-            }
-        }
-        return view('frontend/pages/settings/settings', compact('user', 'company'));
+        return view('frontend/pages/settings/settings', compact('user'));
     }
 
 
@@ -172,22 +216,10 @@ class Settings extends Controller
      */
     public function settingFormValidation(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|min:3|max:255',
-            'gt_email' => 'nullable|email|max:255',
-            'gt_api' => 'nullable|max:255',
-            'gt_location' => 'nullable|max:255'
-        ]);
+        $validated = $request->validate(['name' => 'required|min:3|max:255']);
 
         // Updating the user datas
         $this->updateUserDatasToDatabse($validated);
-
-        $user = Auth::user();
-
-        // Updating company datas
-        if ($user->company_id) {
-            $this->updateCompanyDatasToDatabse($validated, $user->company_id);
-        }
 
         return back()->with('success', 'Profile updated.');
     }
@@ -202,22 +234,5 @@ class Settings extends Controller
     public function updateUserDatasToDatabse($data)
     {
         return DB::table('users')->where('id', Auth::id())->update(['name' => $data['name']]);
-    }
-
-
-    /**
-     * Update company info to the database
-     *
-     * @param  \Illuminate\Http\Request $data
-     * @param  integer $id
-     * @return Illuminate\Support\Facades\DB
-     */
-    public function updateCompanyDatasToDatabse($data, $id)
-    {
-        return DB::table('company')->where('id', $id)->update([
-            'gt_email' => $data['gt_email'],
-            'gt_api' => Crypt::encryptString($data['gt_api']),
-            'gt_location' => $data['gt_location']
-        ]);
     }
 }
