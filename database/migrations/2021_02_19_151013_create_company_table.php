@@ -16,9 +16,9 @@ class CreateCompanyTable extends Migration
         Schema::create('company', function (Blueprint $table) {
             $table->id();
             $table->string('name', '100');
-            $table->string('gt_email', '100')->nullable();
-            $table->string('gt_api', '100')->nullable();
-            $table->string('gt_location', '100')->nullable();
+            $table->string('gt_email')->nullable();
+            $table->string('gt_api')->nullable();
+            $table->string('gt_location')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });
