@@ -20,7 +20,7 @@ use App\Http\Controllers\Settings;
 
 // Reports
 Route::get('/', [Reports::class, 'index'])->middleware(['auth'])->name('reports');
-Route::post('/', [Reports::class, 'upload'])->middleware(['auth'])->name('reports');
+Route::post('/', [Reports::class, 'upload'])->middleware(['auth']);
 
 // Monitoring
 Route::get('/monitoring/{id}', [Monitoring::class, 'index'], function ($id) {
@@ -29,16 +29,16 @@ Route::get('/monitoring/{id}', [Monitoring::class, 'index'], function ($id) {
 
 Route::get('/monitoring/delete/{id}', [Monitoring::class, 'deleteWebsite'], function ($id) {
     return 'id ' . $id;
-})->middleware(['auth'])->name('monitoring');
+})->middleware(['auth']);
 
 // Settings
 Route::get('/settings', [Settings::class, 'settings'])->middleware(['auth'])->middleware(['password.confirm'])->middleware('verified')->name('settings');
-Route::post('/settings', [Settings::class, 'settingFormValidation'])->middleware(['auth'])->name('settings');
+Route::post('/settings', [Settings::class, 'settingFormValidation'])->middleware(['auth']);
 
-Route::get('/settings/monitoring', [Settings::class, 'monitoring'])->middleware(['auth'])->name('monitoring');
+Route::get('/settings/monitoring', [Settings::class, 'monitoring'])->middleware(['auth'])->name('settings.monitoring');
 Route::post('/settings/monitoring', [Settings::class, 'monitoringFormValidation'])->middleware(['auth']);
 
-Route::get('/settings/company', [Settings::class, 'company'])->middleware(['auth']);
+Route::get('/settings/company', [Settings::class, 'company'])->middleware(['auth'])->name('company');
 Route::post('/settings/company', [Settings::class, 'companyFormValidation'])->middleware(['auth']);
 
 Route::get('/cron', [Monitoring::class, 'schedule'])->middleware(['auth']);
