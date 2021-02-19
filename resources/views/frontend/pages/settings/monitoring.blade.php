@@ -6,6 +6,15 @@
     {{-- Content --}}
 @section('content')
 
+    {{-- Header --}}
+    <header class="header pb-0">
+        <div class="container">
+            <h1 class="display-4">Monitoring</h1>
+            <p class="lead-2">Configuration of monitoring of the websites</p>
+        </div>
+    </header>
+    {{-- /.header --}}
+
     {{-- Main Content --}}
     <main class="main-content">
 
