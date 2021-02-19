@@ -27,10 +27,6 @@ Route::get('/monitoring/{id}', [Monitoring::class, 'index'], function ($id) {
     return 'id ' . $id;
 })->middleware(['auth'])->name('monitoring');
 
-Route::get('/monitoring/delete/{id}', [Monitoring::class, 'deleteWebsite'], function ($id) {
-    return 'id ' . $id;
-})->middleware(['auth']);
-
 // Settings
 Route::get('/settings', [Settings::class, 'settings'])->middleware(['auth'])->middleware(['password.confirm'])->middleware('verified')->name('settings');
 Route::post('/settings', [Settings::class, 'settingFormValidation'])->middleware(['auth']);
@@ -40,8 +36,11 @@ Route::post('/settings/monitoring', [Settings::class, 'monitoringFormValidation'
 
 Route::get('/settings/company', [Settings::class, 'company'])->middleware(['auth'])->name('company');
 Route::post('/settings/company', [Settings::class, 'companyFormValidation'])->middleware(['auth']);
+Route::get('/settings/company/delete/{id}', [Settings::class, 'deleteWebsite'], function ($id) {
+    return 'id ' . $id;
+})->middleware(['auth']);
 
 Route::get('/cron', [Monitoring::class, 'schedule'])->middleware(['auth']);
 
-// Use Breeze's routes instead of customs login routes
+// Use Breeze's routes
 require __DIR__ . '/auth.php';
