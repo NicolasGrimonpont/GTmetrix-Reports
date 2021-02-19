@@ -20,28 +20,21 @@ class Settings extends Controller
     public function settings()
     {
         $user = Auth::user();
-        $gt_api = null;
-        $gt_email = null;
+        $company = $this->getCompanyFromDatabase();
 
-        // Get API credentials from database
-        if ($gt_credentials = $this->getSettingsFromDatabase()) {
+        // Get Gtmetrix settings from database
+        if ($company->gt_api) {
 
-            $gt_credentials = json_decode($gt_credentials->value);
-            $gt_email = $gt_credentials->email;
-
-            if ($gt_credentials->gt_api) {
-
-                // Decryption of API key
-                try {
-                    $gt_api = Crypt::decryptString($gt_credentials->gt_api);
-                } catch (DecryptException $e) {
-                    report($e);
-                    $gt_api = null;
-                }
+            // Decryption of API key
+            try {
+                $company->gt_api = Crypt::decryptString($company->gt_api);
+            } catch (DecryptException $e) {
+                report($e);
+                $company->gt_api = null;
             }
         }
 
-        return view('frontend/pages/settings/settings', compact('user', 'gt_api', 'gt_email'));
+        return view('frontend/pages/settings/settings', compact('user', 'company'));
     }
 
 
@@ -119,13 +112,13 @@ class Settings extends Controller
 
 
     /**
-     * Get API credentials from databse
+     * Get company information from database
      *
      * @return Illuminate\Support\Facades\DB
      */
-    public function getSettingsFromDatabase()
+    public function getCompanyFromDatabase()
     {
-        return DB::table('settings')->where('attribute', 'gt_credentials')->first();
+        return DB::table('company')->where('id',)->first();
     }
 
 
