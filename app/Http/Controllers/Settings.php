@@ -45,6 +45,7 @@ class Settings extends Controller
     }
 
 
+
     /**
      * Show the page
      *
@@ -57,6 +58,7 @@ class Settings extends Controller
 
         return view('frontend/pages/settings/company', compact('domains'));
     }
+
 
 
     /**
@@ -154,6 +156,7 @@ class Settings extends Controller
     }
 
 
+
     /**
      * Update user info to the database
      *
@@ -164,6 +167,7 @@ class Settings extends Controller
     {
         return DB::table('users')->where('id', Auth::id())->update(['name' => $data['name']]);
     }
+
 
 
     /**
@@ -184,6 +188,7 @@ class Settings extends Controller
             ]
         );
     }
+
 
 
     /**
