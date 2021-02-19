@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Log;
 
 class Settings extends Controller
 {
+    /***** General settings *****/
+
     /**
      * Show the page
      *
@@ -20,24 +22,92 @@ class Settings extends Controller
     public function settings()
     {
         $user = Auth::user();
-        $company = $this->getCompanyFromDatabase();
 
-        // Get Gtmetrix settings from database
-        if ($company->gt_api) {
+        $company = new Settings();
+        $company->gt_email = null;
+        $company->gt_api = null;
+        $company->gt_location = null;
 
-            // Decryption of API key
-            try {
-                $company->gt_api = Crypt::decryptString($company->gt_api);
-            } catch (DecryptException $e) {
-                report($e);
-                $company->gt_api = null;
+        if ($user->company_id) {
+
+            if ($company = $this->getCompanyFromDatabase($user->company_id)) {
+
+                // Get Gtmetrix settings from database
+                if ($company->gt_api) {
+
+                    // Decryption of API key
+                    try {
+                        $company->gt_api = Crypt::decryptString($company->gt_api);
+                    } catch (DecryptException $e) {
+                        report($e);
+                        $company->gt_api = null;
+                    }
+                }
             }
         }
-
         return view('frontend/pages/settings/settings', compact('user', 'company'));
     }
 
 
+    /**
+     * Receive post value from from form
+     *
+     * @param  \Illuminate\Http\Request
+     */
+    public function settingFormValidation(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|min:3|max:255',
+            'gt_email' => 'nullable|email|max:255',
+            'gt_api' => 'nullable|max:255',
+            'gt_location' => 'nullable|max:255'
+        ]);
+
+        // Updating the user datas
+        $this->updateUserDatasToDatabse($validated);
+
+        $user = Auth::user();
+
+        // Updating company datas
+        if ($user->company_id) {
+            $this->updateCompanyDatasToDatabse($validated, $user->company_id);
+        }
+
+        return back()->with('success', 'Profile updated.');
+    }
+
+
+    /**
+     * Update user info to the database
+     *
+     * @param  \Illuminate\Http\Request
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function updateUserDatasToDatabse($data)
+    {
+        return DB::table('users')->where('id', Auth::id())->update(['name' => $data['name']]);
+    }
+
+
+    /**
+     * Update company info to the database
+     *
+     * @param  \Illuminate\Http\Request $data
+     * @param  integer $id
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function updateCompanyDatasToDatabse($data, $id)
+    {
+        return DB::table('company')->where('id', $id)->update([
+            'gt_email' => $data['gt_email'],
+            'gt_api' => Crypt::encryptString($data['gt_api']),
+            'gt_location' => $data['gt_location']
+        ]);
+    }
+
+
+
+    /***** Company settings *****/
 
     /**
      * Show the page
@@ -53,6 +123,32 @@ class Settings extends Controller
     }
 
 
+    /**
+     * Get company information from database
+     *
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function getCompanyFromDatabase($id)
+    {
+        return DB::table('company')->where('id', $id)->first();
+    }
+
+
+    /**
+     * Delete website and all datas related
+     *
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function deleteWebsite($id)
+    {
+        DB::table('sites')->where('id', '=', $id)->delete();
+        DB::table('monitoring')->where('site_id', '=', $id)->delete();
+        return back();
+    }
+
+
+
+    /***** Monitoring settings *****/
 
     /**
      * Show the page
@@ -65,29 +161,6 @@ class Settings extends Controller
         $domains = $this->getDomainsFromDatabase();
 
         return view('frontend/pages/settings/monitoring', compact('domains'));
-    }
-
-
-    /**
-     * Receive post value from from form
-     *
-     * @param  \Illuminate\Http\Request
-     */
-    public function settingFormValidation(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|min:3|max:255',
-            'gt_email' => 'nullable|email|max:255',
-            'gt_api' => 'nullable|max:255'
-        ]);
-
-        // Updating the user datas
-        $this->updateUserDatasToDatabse($validated);
-
-        // Updating settings datas
-        $this->updateSettingsDatasToDatabse($validated);
-
-        return back()->with('success', 'Profile updated.');
     }
 
 
@@ -112,17 +185,6 @@ class Settings extends Controller
 
 
     /**
-     * Get company information from database
-     *
-     * @return Illuminate\Support\Facades\DB
-     */
-    public function getCompanyFromDatabase()
-    {
-        return DB::table('company')->where('id',)->first();
-    }
-
-
-    /**
      * Get domains from databse
      *
      * @return Illuminate\Support\Facades\DB
@@ -142,57 +204,9 @@ class Settings extends Controller
     public function updateMonitoringFromDatabase($data)
     {
         return DB::table('sites')
-            ->where('id', $data['id'])
-            ->update([
-                'monitoring' => ($data['state'] === 'true') ? false : true
-            ]);
-    }
-
-
-
-    /**
-     * Update user info to the database
-     *
-     * @param  \Illuminate\Http\Request
-     * @return Illuminate\Support\Facades\DB
-     */
-    public function updateUserDatasToDatabse($data)
-    {
-        return DB::table('users')->where('id', Auth::id())->update(['name' => $data['name']]);
-    }
-
-
-
-    /**
-     * Update settings info to the database
-     *
-     * @param  \Illuminate\Http\Request
-     * @return Illuminate\Support\Facades\DB
-     */
-    public function updateSettingsDatasToDatabse($data)
-    {
-        return DB::table('settings')->updateOrInsert(
-            ['attribute' => 'gt_credentials',],
-            [
-                'value' => json_encode([
-                    'email' => $data['gt_email'],
-                    'gt_api' => Crypt::encryptString($data['gt_api'])
-                ])
-            ]
-        );
-    }
-
-
-
-    /**
-     * Delete website and all datas related
-     *
-     * @return Illuminate\Support\Facades\DB
-     */
-    public function deleteWebsite($id)
-    {
-        DB::table('sites')->where('id', '=', $id)->delete();
-        DB::table('monitoring')->where('site_id', '=', $id)->delete();
-        return back();
+        ->where('id', $data['id'])
+        ->update([
+            'monitoring' => ($data['state'] === 'true') ? false : true
+        ]);
     }
 }
