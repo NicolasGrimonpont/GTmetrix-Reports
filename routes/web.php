@@ -45,7 +45,10 @@ Route::post('/settings', [Settings::class, 'settingFormValidation'])->middleware
 Route::get('/settings/monitoring', [Settings::class, 'monitoring'])->middleware(['auth'])->name('monitoring');
 Route::post('/settings/monitoring', [Settings::class, 'monitoringFormValidation'])->middleware(['auth']);
 
-Route::get('/cron', [Monitoring::class, 'schedule'])->middleware(['auth'])->name('cron');
+Route::get('/settings/company', [Settings::class, 'company'])->middleware(['auth']);
+Route::post('/settings/company', [Settings::class, 'companyFormValidation'])->middleware(['auth']);
+
+Route::get('/cron', [Monitoring::class, 'schedule'])->middleware(['auth']);
 
 // Use Breeze's routes instead of customs login routes
 require __DIR__ . '/auth.php';
