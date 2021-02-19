@@ -12,7 +12,123 @@ use Illuminate\Support\Facades\Log;
 
 class Settings extends Controller
 {
-    /***** General settings *****/
+    /************************* Company settings *************************/
+
+    /**
+     * Show the page
+     *
+     * @return \Illuminate\View\View
+     */
+    public function company()
+    {
+        return view('frontend/pages/settings/company');
+    }
+
+
+    /**
+     * Get company information from database
+     *
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function getCompanyFromDatabase($id)
+    {
+        return DB::table('company')->where('id', $id)->first();
+    }
+
+
+    /************************* Websites settings *************************/
+
+    /**
+     * Show the page
+     *
+     * @return \Illuminate\View\View
+     */
+    public function websites()
+    {
+        // Get tested domains from the database
+        $domains = $this->getDomainsFromDatabase();
+
+        return view('frontend/pages/settings/websites', compact('domains'));
+    }
+
+
+    /**
+     * Delete website and all datas related
+     *
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function deleteWebsite($id)
+    {
+        DB::table('sites')->where('id', '=', $id)->delete();
+        DB::table('monitoring')->where('site_id', '=', $id)->delete();
+        return back();
+    }
+
+
+    /************************* Monitoring settings *************************/
+
+    /**
+     * Show the page
+     *
+     * @return \Illuminate\View\View
+     */
+    public function monitoring()
+    {
+        // Get tested domains from the database
+        $domains = $this->getDomainsFromDatabase();
+
+        return view('frontend/pages/settings/monitoring', compact('domains'));
+    }
+
+
+    /**
+     * Update monitoring data from form processing (ajax)
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function monitoringFormValidation(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|integer',
+            'state' => 'nullable'
+        ]);
+
+        // Add the testimonials to the database
+        $this->updateMonitoringFromDatabase($validated);
+
+        return response()->json(['msg' => 'success', 'data' => $validated]);
+    }
+
+
+    /**
+     * Get domains from databse
+     *
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function getDomainsFromDatabase()
+    {
+        return DB::table('sites')->get();
+    }
+
+
+    /**
+     * Update monitoring state on database
+     *
+     * @param  \Illuminate\Http\Request  $data
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function updateMonitoringFromDatabase($data)
+    {
+        return DB::table('sites')
+            ->where('id', $data['id'])
+            ->update([
+                'monitoring' => ($data['state'] === 'true') ? false : true
+            ]);
+    }
+
+
+    /************************* General settings *************************/
 
     /**
      * Show the page
@@ -102,111 +218,6 @@ class Settings extends Controller
             'gt_email' => $data['gt_email'],
             'gt_api' => Crypt::encryptString($data['gt_api']),
             'gt_location' => $data['gt_location']
-        ]);
-    }
-
-
-
-    /***** Company settings *****/
-
-    /**
-     * Show the page
-     *
-     * @return \Illuminate\View\View
-     */
-    public function company()
-    {
-        // Get tested domains from the database
-        $domains = $this->getDomainsFromDatabase();
-
-        return view('frontend/pages/settings/company', compact('domains'));
-    }
-
-
-    /**
-     * Get company information from database
-     *
-     * @return Illuminate\Support\Facades\DB
-     */
-    public function getCompanyFromDatabase($id)
-    {
-        return DB::table('company')->where('id', $id)->first();
-    }
-
-
-    /**
-     * Delete website and all datas related
-     *
-     * @return Illuminate\Support\Facades\DB
-     */
-    public function deleteWebsite($id)
-    {
-        DB::table('sites')->where('id', '=', $id)->delete();
-        DB::table('monitoring')->where('site_id', '=', $id)->delete();
-        return back();
-    }
-
-
-
-    /***** Monitoring settings *****/
-
-    /**
-     * Show the page
-     *
-     * @return \Illuminate\View\View
-     */
-    public function monitoring()
-    {
-        // Get tested domains from the database
-        $domains = $this->getDomainsFromDatabase();
-
-        return view('frontend/pages/settings/monitoring', compact('domains'));
-    }
-
-
-    /**
-     * Update monitoring data from form processing (ajax)
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function monitoringFormValidation(Request $request)
-    {
-        $validated = $request->validate([
-            'id' => 'required|integer',
-            'state' => 'nullable'
-        ]);
-
-        // Add the testimonials to the database
-        $this->updateMonitoringFromDatabase($validated);
-
-        return response()->json(['msg' => 'success', 'data' => $validated]);
-    }
-
-
-    /**
-     * Get domains from databse
-     *
-     * @return Illuminate\Support\Facades\DB
-     */
-    public function getDomainsFromDatabase()
-    {
-        return DB::table('sites')->get();
-    }
-
-
-    /**
-     * Update monitoring state on database
-     *
-     * @param  \Illuminate\Http\Request  $data
-     * @return Illuminate\Support\Facades\DB
-     */
-    public function updateMonitoringFromDatabase($data)
-    {
-        return DB::table('sites')
-        ->where('id', $data['id'])
-        ->update([
-            'monitoring' => ($data['state'] === 'true') ? false : true
         ]);
     }
 }

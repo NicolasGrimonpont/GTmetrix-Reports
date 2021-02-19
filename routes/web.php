@@ -28,18 +28,21 @@ Route::get('/monitoring/{id}', [Monitoring::class, 'index'], function ($id) {
 })->middleware(['auth'])->name('monitoring');
 
 // Settings
-Route::get('/settings', [Settings::class, 'settings'])->middleware(['auth'])->middleware(['password.confirm'])->middleware('verified')->name('settings');
-Route::post('/settings', [Settings::class, 'settingFormValidation'])->middleware(['auth']);
-
-Route::get('/settings/monitoring', [Settings::class, 'monitoring'])->middleware(['auth'])->name('settings.monitoring');
-Route::post('/settings/monitoring', [Settings::class, 'monitoringFormValidation'])->middleware(['auth']);
-
-Route::get('/settings/company', [Settings::class, 'company'])->middleware(['auth'])->name('company');
+Route::get('/settings/company', [Settings::class, 'company'])->middleware(['auth'])->name('settings.company');
 Route::post('/settings/company', [Settings::class, 'companyFormValidation'])->middleware(['auth']);
 Route::get('/settings/company/delete/{id}', [Settings::class, 'deleteWebsite'], function ($id) {
     return 'id ' . $id;
 })->middleware(['auth']);
 
+Route::get('/settings/websites', [Settings::class, 'websites'])->middleware(['auth'])->name('settings.websites');
+
+Route::get('/settings/monitoring', [Settings::class, 'monitoring'])->middleware(['auth'])->name('settings.monitoring');
+Route::post('/settings/monitoring', [Settings::class, 'monitoringFormValidation'])->middleware(['auth']);
+
+Route::get('/settings', [Settings::class, 'settings'])->middleware(['auth'])->middleware(['password.confirm'])->middleware('verified')->name('settings');
+Route::post('/settings', [Settings::class, 'settingFormValidation'])->middleware(['auth']);
+
+// Cron tasks
 Route::get('/cron', [Monitoring::class, 'schedule'])->middleware(['auth']);
 
 // Use Breeze's routes

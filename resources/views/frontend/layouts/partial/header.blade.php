@@ -50,7 +50,8 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">Welcome {{ Auth::user()->name }} <span class="arrow"></span></a>
                             <nav class="nav align-right">
-                                <a href="{{ route('company') }}" class="nav-link">Company</a>
+                                <a href="{{ route('settings.company') }}" class="nav-link">Company</a>
+                                <a href="{{ route('settings.websites') }}" class="nav-link">Websites</a>
                                 <a href="{{ route('settings.monitoring') }}" class="nav-link">Monitoring</a>
                                 <a href="{{ route('settings') }}" class="nav-link">Settings</a>
                                 <form method="POST" action="{{ route('logout') }}">
