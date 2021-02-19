@@ -41,7 +41,21 @@ class Settings extends Controller
             }
         }
 
-        return view('frontend/pages/settings', compact('user', 'gt_api', 'gt_email'));
+        return view('frontend/pages/settings/settings', compact('user', 'gt_api', 'gt_email'));
+    }
+
+
+    /**
+     * Show the page
+     *
+     * @return \Illuminate\View\View
+     */
+    public function company()
+    {
+        // Get tested domains from the database
+        $domains = $this->getDomainsFromDatabase();
+
+        return view('frontend/pages/settings/company', compact('domains'));
     }
 
 
@@ -55,7 +69,7 @@ class Settings extends Controller
         // Get tested domains from the database
         $domains = $this->getDomainsFromDatabase();
 
-        return view('frontend/pages/monitoring', compact('domains'));
+        return view('frontend/pages/settings/monitoring', compact('domains'));
     }
 
 
@@ -169,5 +183,18 @@ class Settings extends Controller
                 ])
             ]
         );
+    }
+
+
+    /**
+     * Delete website and all datas related
+     *
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function deleteWebsite($id)
+    {
+        DB::table('sites')->where('id', '=', $id)->delete();
+        DB::table('monitoring')->where('site_id', '=', $id)->delete();
+        return back();
     }
 }
