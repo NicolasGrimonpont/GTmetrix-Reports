@@ -3,7 +3,7 @@
 
 @section('title', 'Upload')
 
-{{-- Content --}}
+    {{-- Content --}}
 @section('content')
 
     {{-- Header --}}
@@ -65,16 +65,11 @@
                                         {{ old('gt_location', $company->gt_location) === '0' ? 'selected' : '' }}>
                                         Select a default location
                                     </option>
-                                    <option value="1"
-                                        {{ old('gt_location', $company->gt_location) === '1' ? 'selected' : '' }}>
-                                        Canada
-                                    </option>
-                                    <option value="2"
-                                        {{ old('gt_location', $company->gt_location) === '2' ? 'selected' : '' }}>
-                                        US West</option>
-                                    <option value="3"
-                                        {{ old('gt_location', $company->gt_location) === '3' ? 'selected' : '' }}>
-                                        US Est</option>
+
+                                    @foreach ($company->gt_config['locations'] as $id)
+                                        <option value="{{ $id }}">{{ $id }}</option>
+                                    @endforeach
+
                                 </select>
                                 @error('gt_location')
                                     <div class="invalid-feedback">{{ $message }}</div>
