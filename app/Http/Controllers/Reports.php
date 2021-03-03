@@ -37,21 +37,20 @@ class Reports extends Controller
      */
     public function upload(Request $request)
     {
-        // Get API credentials from database
-        if ($api_credentials = $this->getApiKey()) {
+        $user = Auth::user();
 
-            $gt_credentials = json_decode($api_credentials->value);
-            $gt_email = $gt_credentials->email;
+        // Get API credentials from database
+        if ($company = $this->getCompany($user->company_id)) {
 
             // Decrypt GTmetrix API key
-            if (!$gt_api = $this->decryptApiKey($gt_credentials->gt_api)) {
+            if (!$company->gt_api = $this->decryptApiKey($company->gt_api)) {
                 Log::error("Error decrypting the API key");
                 return response()->json(['error' => 'Issue with API credentials, please contact an admin']);
             }
         }
 
         // Check if datas for API are empty
-        if (empty($gt_email) || empty($gt_api)) {
+        if (empty($company->gt_email) || empty($company->gt_api)) {
             return response()->json(['error' => 'Issue with API credentials, please verify your credentials on settings']);
         }
 
@@ -66,10 +65,10 @@ class Reports extends Controller
         foreach ($sites as $site) {
 
             // Make gtmetrix call for each domain
-            if ($result = $this->gtmetrixApi($site, $gt_email, $gt_api)) {
+            if ($result = $this->gtmetrixApi($site, $company->gt_email, $company->gt_api)) {
 
                 // Add result datas requested to database
-                if (!$this->addResultToDatabase($site, $result)) {
+                if (!$this->addResultToDatabase($site, $company->id, $result)) {
                     Log::error("Error to record the datas on the database");
                     return response()->json(['error' => 'Issue with your request']);
                 }
@@ -83,13 +82,14 @@ class Reports extends Controller
 
 
     /**
-     * Get GTmetrix API key from database
+     * Get company datas from database
      *
-     * @return $api_key
+     * @param  $company_id
+     * @return Illuminate\Support\Facades\DB
      */
-    public function getApiKey()
+    public function getCompany($company_id)
     {
-        return DB::table('settings')->where('attribute', 'gt_credentials')->first();
+        return DB::table('company')->where('id', $company_id)->first();
     }
 
 
@@ -165,51 +165,52 @@ class Reports extends Controller
      * Add result to database
      *
      * @param  \Illuminate\Http\Request  $site
+     * @param  \Illuminate\Http\Request  $company_id
      * @param  Entrecore\GTMetrixClient\GTMetrixClient  $result
      * @return Illuminate\Support\Facades\DB
      */
-    public function addResultToDatabase($site, $result)
+    public function addResultToDatabase($site, $company_id, $result)
     {
         $ressources = $result->getResources();
 
-        return DB::table('sites')
-            ->updateOrInsert(
-                [
-                    'site' => trim($site)
-                ],
-                [
-                    'gt_id' => is_null($result->getId()),
-                    'poll_state_url' => $result->getpollStateUrl(),
-                    'state' => $result->getstate(),
-                    'error' => (!empty($result->getError())) ? $result->getError() : null,
-                    'report_url' => $result->getreportUrl(),
-                    'pagespeed_score' => $result->getpagespeedScore(),
-                    'yslow_score' => $result->getyslowScore(),
-                    'html_bytes' => $result->gethtmlBytes(),
-                    'html_load_time' => $result->gethtmlLoadTime(),
-                    'page_bytes' => $result->getpageBytes(),
-                    'page_load_time' => $result->getpageLoadTime(),
-                    'page_elements' => $result->getpageElements(),
-                    'redirect_duration' => $result->getredirectDuration(),
-                    'connect_duration' => $result->getconnectDuration(),
-                    'backend_duration' => $result->getbackendDuration(),
-                    'first_paint_time' => $result->getfirstPaintTime(),
-                    'dom_interactive_time' => $result->getdomInteractiveTime(),
-                    'dom_content_loaded_time' => $result->getdomInteractiveTime(),
-                    'dom_content_loaded_duration' => $result->getdomContentLoadedDuration(),
-                    'onload_time' => $result->getonloadTime(),
-                    'onload_duration' => $result->getonloadDuration(),
-                    'fully_loaded_time' => $result->getfullyLoadedTime(),
-                    'rum_speed_index' => $result->getrumSpeedIndex(),
-                    'report_pdf' => (!empty($ressources)) ? $ressources['report_pdf'] : null,
-                    'pagespeed' => (!empty($ressources)) ? $ressources['pagespeed'] : null,
-                    'har' => (!empty($ressources)) ? $ressources['har'] : null,
-                    'pagespeed_files' => (!empty($ressources)) ? $ressources['pagespeed_files'] : null,
-                    'report_pdf_full' => (!empty($ressources)) ? $ressources['report_pdf_full'] : null,
-                    'yslow' => (!empty($ressources)) ? $ressources['yslow'] : null,
-                    'screenshot' => (!empty($ressources)) ? $ressources['screenshot'] : null,
-                    'updated_at' => \Carbon\Carbon::now()
-                ]
-            );
+        return DB::table('sites')->updateOrInsert(
+            [
+                'site' => trim($site)
+            ],
+            [
+                'company_id' => $company_id,
+                'gt_id' => is_null($result->getId()),
+                'poll_state_url' => $result->getpollStateUrl(),
+                'state' => $result->getstate(),
+                'error' => (!empty($result->getError())) ? $result->getError() : null,
+                'report_url' => $result->getreportUrl(),
+                'pagespeed_score' => $result->getpagespeedScore(),
+                'yslow_score' => $result->getyslowScore(),
+                'html_bytes' => $result->gethtmlBytes(),
+                'html_load_time' => $result->gethtmlLoadTime(),
+                'page_bytes' => $result->getpageBytes(),
+                'page_load_time' => $result->getpageLoadTime(),
+                'page_elements' => $result->getpageElements(),
+                'redirect_duration' => $result->getredirectDuration(),
+                'connect_duration' => $result->getconnectDuration(),
+                'backend_duration' => $result->getbackendDuration(),
+                'first_paint_time' => $result->getfirstPaintTime(),
+                'dom_interactive_time' => $result->getdomInteractiveTime(),
+                'dom_content_loaded_time' => $result->getdomInteractiveTime(),
+                'dom_content_loaded_duration' => $result->getdomContentLoadedDuration(),
+                'onload_time' => $result->getonloadTime(),
+                'onload_duration' => $result->getonloadDuration(),
+                'fully_loaded_time' => $result->getfullyLoadedTime(),
+                'rum_speed_index' => $result->getrumSpeedIndex(),
+                'report_pdf' => (!empty($ressources)) ? $ressources['report_pdf'] : null,
+                'pagespeed' => (!empty($ressources)) ? $ressources['pagespeed'] : null,
+                'har' => (!empty($ressources)) ? $ressources['har'] : null,
+                'pagespeed_files' => (!empty($ressources)) ? $ressources['pagespeed_files'] : null,
+                'report_pdf_full' => (!empty($ressources)) ? $ressources['report_pdf_full'] : null,
+                'yslow' => (!empty($ressources)) ? $ressources['yslow'] : null,
+                'screenshot' => (!empty($ressources)) ? $ressources['screenshot'] : null,
+                'updated_at' => \Carbon\Carbon::now()
+            ]
+        );
     }
 }

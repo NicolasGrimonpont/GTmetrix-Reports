@@ -6,6 +6,7 @@ use App\Http\Controllers\Home;
 use App\Http\Controllers\Monitoring;
 use App\Http\Controllers\Reports;
 use App\Http\Controllers\Settings;
+use App\Http\Controllers\Cron;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +44,7 @@ Route::get('/settings', [Settings::class, 'settings'])->middleware(['auth'])->mi
 Route::post('/settings', [Settings::class, 'settingFormValidation'])->middleware(['auth']);
 
 // Cron tasks
-Route::get('/cron', [Monitoring::class, 'schedule'])->middleware(['auth']);
+Route::get('/cron', [Cron::class, 'schedule'])->middleware(['auth']);
 
 // Use Breeze's routes
 require __DIR__ . '/auth.php';

@@ -17,7 +17,6 @@ class CreateMonitoringTable extends Migration
             $table->id();
             $table->integer('site_id');
             $table->string('site', '100');
-            $table->boolean('monitoring')->nullable();
             $table->string('gt_id', '20')->nullable();
             $table->string('poll_state_url', '200')->nullable();
             $table->string('state', '50')->nullable();

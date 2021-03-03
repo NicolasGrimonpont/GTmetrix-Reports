@@ -20,26 +20,22 @@ class Cron extends Controller
      */
     public function schedule()
     {
-        // Get API Datas
-        if ($api_credentials = $this->getApiKey()) {
+        // Get all monitored domains
+        if ($sites = $this->getMonitoredDomains()) {
 
-            $gt_credentials = json_decode($api_credentials->value);
-            $gt_email = $gt_credentials->email;
-            $gt_api = $gt_credentials->gt_api;
+            foreach ($sites as $site) {
 
-            // Check if datas for API are empty
-            if (!empty($gt_email) && !empty($gt_api)) {
+                // Get the company of this website
+                if ($company = $this->getCompany($site->company_id)) {
 
-                // Decrypt GTmetrix API key
-                if ($gt_api = $this->decryptApiKey($gt_credentials->gt_api)) {
+                    // Check if datas for API are empty
+                    if (!empty($company->gt_email) && !empty($company->gt_api)) {
 
-                    // Get all monitored domains
-                    if ($sites = $this->getMonitoredDomains()) {
+                        // Decrypt GTmetrix API key
+                        if ($company->gt_api = $this->decryptApiKey($company->gt_api)) {
 
-                        foreach ($sites as $site) {
-
-                            // Make gtmetrix call for each domain
-                            if ($result = $this->gtmetrixApi($site, $gt_email, $gt_api)) {
+                            // Make gtmetrix call for this domain
+                            if ($result = $this->gtmetrixApi($site, $company->gt_email, $company->gt_api)) {
 
                                 // Add result datas requested to database
                                 if (!$this->addResultToDatabase($site, $result)) {
@@ -48,29 +44,25 @@ class Cron extends Controller
                             } else {
                                 Log::error("Cron task: The GTmetrix request don't work properly");
                             }
+                        } else {
+                            Log::error("Cron task: Error decrypting the API key");
                         }
                     }
-                } else {
-                    Log::error("Cron task: Error decrypting the API key");
                 }
-            } else {
-                Log::error("Cron task: Issue with API credentials");
             }
-        } else {
-            Log::error("Cron task: Error getting the API key");
         }
     }
 
 
 
     /**
-     * Get GTmetrix API key from database
+     * Get Company from database
      *
-     * @return $api_key
+     * @return Illuminate\Support\Facades\DB
      */
-    public function getApiKey()
+    public function getCompany($company_id)
     {
-        return DB::table('settings')->where('attribute', 'gt_credentials')->first();
+        return DB::table('company')->where('id', $company_id)->first();
     }
 
 

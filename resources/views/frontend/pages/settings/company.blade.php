@@ -66,9 +66,11 @@
                                         Select a default location
                                     </option>
 
-                                    @foreach ($company->gt_config['locations'] as $id)
-                                        <option value="{{ $id }}">{{ $id }}</option>
-                                    @endforeach
+                                    @if (isset($company->gt_config['locations']))
+                                        @foreach ($company->gt_config['locations'] as $id)
+                                            <option value="{{ $id }}">{{ $id }}</option>
+                                        @endforeach
+                                    @endif
 
                                 </select>
                                 @error('gt_location')

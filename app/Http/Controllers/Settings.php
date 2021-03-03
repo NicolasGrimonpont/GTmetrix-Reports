@@ -31,7 +31,7 @@ class Settings extends Controller
         $company->gt_location = null;
         $company->gt_config = null;
 
-        if ($user->company_id) {
+        if (isset($user->company_id)) {
 
             // Get company datas from databse
             if ($company = $this->getCompanyFromDatabase($user->company_id)) {
@@ -84,7 +84,7 @@ class Settings extends Controller
         $user = Auth::user();
 
         // Updating company datas
-        if ($user->company_id) {
+        if (isset($user->company_id)) {
             $this->updateCompanyDatasToDatabse($validated, $user->company_id);
         }
 
@@ -99,9 +99,9 @@ class Settings extends Controller
      * @param  integer $id
      * @return Illuminate\Support\Facades\DB
      */
-    public function updateCompanyDatasToDatabse($data, $id)
+    public function updateCompanyDatasToDatabse($data, $company_id)
     {
-        return DB::table('company')->where('id', $id)->update([
+        return DB::table('company')->where('id', $company_id)->update([
             'gt_email' => $data['gt_email'],
             'gt_api' => Crypt::encryptString($data['gt_api']),
             'gt_location' => $data['gt_location']
