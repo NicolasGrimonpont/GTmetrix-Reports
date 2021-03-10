@@ -19,26 +19,73 @@
     {{-- Main Content --}}
     <main class="main-content">
 
-        <section class="section">
+        <section class="section pt-6">
             <div class="container">
 
-                <div class="row">
-                    <div class="col-md-4 mx-auto">
+                @if (!isset($user->company_id))
 
-                        <form class="input-round" method="post">
+                    <div class="row">
+                        <div class="col mx-auto">
 
-                            @csrf
+                            <div class="alert alert-warning" role="alert">
+                                <h4 class="alert-heading">Welcome {{ $user->name ?? '' }} !</h4>
+                                <p>You have not configured your company yet, please complete the form bellow to create your
+                                    company.</p>
+                            </div>
 
-                            @if (Session::has('success'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ Session::get('success') }}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                            @endif
+                        </div>
+                    </div>
 
-                            <h5 class="mt-5 mb-3">GTmetrix account</h5>
+                @endif
+
+
+                @if (Session::has('success'))
+                    <div class="row">
+                        <div class="col-md-8 mx-auto">
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ Session::get('success') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                <form method="post">
+
+                    @csrf
+
+                    <div class="row pt-7">
+
+                        <div class="col-3 ml-auto">
+                            <h5>Your company</h5>
+                        </div>
+
+                        <div class="col-5 mr-auto">
+
+                            <div class="form-group">
+                                <input type="text" class="form-control @error('company_name') is-invalid @enderror"
+                                    placeholder="Company name" name="company_name"
+                                    value="{{ old('company_name', $company->name ?? '') }}">
+                                @error('company_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <hr class="my-7">
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-3 ml-auto">
+                            <h5>GTmetrix account</h5>
+                        </div>
+
+
+                        <div class="col-5 mr-auto">
 
                             <div class="form-group">
                                 <input type="text" class="form-control @error('gt_email') is-invalid @enderror"
@@ -49,6 +96,7 @@
                                 @enderror
                             </div>
 
+
                             <div class="form-group">
                                 <input type="text" class="form-control @error('gt_api') is-invalid @enderror"
                                     placeholder="GTmetrix API key" name="gt_api"
@@ -57,6 +105,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
 
                             <div class="form-group">
                                 <select class="form-control  @error('gt_location') is-invalid @enderror"
@@ -78,13 +127,14 @@
                                 @enderror
                             </div>
 
-                            <input class="btn btn-primary btn-round btn-lg btn-block" type="submit">
+                            <hr class="my-7">
 
-                        </form>
+                            <input class="btn btn-primary btn-lg btn-block" type="submit">
+
+                        </div>
 
                     </div>
-                </div>
-
+                </form>
 
             </div>
         </section>

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 use Entrecore\GTMetrixClient\GTMetrixClient;
 
@@ -23,14 +25,17 @@ class Settings extends Controller
      */
     public function company()
     {
+        // Get user datas
         $user = Auth::user();
 
+        // Create empty  object of company
         $company = new Settings();
         $company->gt_email = null;
         $company->gt_api = null;
         $company->gt_location = null;
         $company->gt_config = null;
 
+        // If the user have a company
         if (isset($user->company_id)) {
 
             // Get company datas from databse
@@ -53,7 +58,7 @@ class Settings extends Controller
             }
         }
 
-        return view('frontend/pages/settings/company', compact('company'));
+        return view('frontend/pages/settings/company', compact('company', 'user'));
     }
 
 
@@ -75,21 +80,69 @@ class Settings extends Controller
      */
     public function companyFormValidation(Request $request)
     {
-        $validated = $request->validate([
+        // Get user datas
+        $user = Auth::user();
+
+        // Validate the data & unicity of company name excepted for this user
+        $validator = Validator::make($request->all(), [
+            'company_name' => [
+                'required', 'string', 'max:100',
+                Rule::unique('company', 'name')->ignore($user->company_id),
+            ],
             'gt_email' => 'nullable|email|max:255',
             'gt_api' => 'nullable|max:255',
             'gt_location' => 'nullable|max:255'
         ]);
 
-        $user = Auth::user();
-
-        // Updating company datas
-        if (isset($user->company_id)) {
-            $this->updateCompanyDatasToDatabse($validated, $user->company_id);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
         }
 
-        return back()->with('success', 'Company updated.');
+        // Update the company of the user or create a new one
+        if (isset($user->company_id)) {
+
+            // Update the company previously created by the user
+            if ($this->updateCompanyDatasToDatabase($request->all(), $user->company_id)) {
+
+                return back()->with('success', 'Company updated.');
+            }
+        } else {
+
+            // Create a new company
+            if ($company_id = $this->insertCompanyDatasToDatabase($request->all())) {
+
+                // Update the user profile with the new company id
+                if ($this->updateUserCompanyIdToDatabse($company_id)) {
+
+                    return back()->with('success', 'Company updated.');
+                } else {
+
+                    Log::error("The user profile has not been updated with the new company");
+                }
+            }
+        }
     }
+
+
+    /**
+     * Insert company info to the database and get the id
+     *
+     * @param  \Illuminate\Http\Request $data
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function insertCompanyDatasToDatabase($data)
+    {
+        return DB::table('company')->insertGetId(
+            [
+                'name' => $data['company_name'],
+                'gt_email' => $data['gt_email'],
+                'gt_api' => Crypt::encryptString($data['gt_api']),
+                'gt_location' => $data['gt_location'],
+                'updated_at' => \Carbon\Carbon::now()
+            ]
+        );
+    }
+
 
 
     /**
@@ -99,14 +152,30 @@ class Settings extends Controller
      * @param  integer $id
      * @return Illuminate\Support\Facades\DB
      */
-    public function updateCompanyDatasToDatabse($data, $company_id)
+    public function updateCompanyDatasToDatabase($data, $company_id)
     {
         return DB::table('company')->where('id', $company_id)->update([
+            'name' => $data['company_name'],
             'gt_email' => $data['gt_email'],
             'gt_api' => Crypt::encryptString($data['gt_api']),
-            'gt_location' => $data['gt_location']
+            'gt_location' => $data['gt_location'],
+            'updated_at' => \Carbon\Carbon::now()
         ]);
     }
+
+
+
+    /**
+     * Update user info with the new company id
+     *
+     * @param  \Illuminate\Http\Request
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function updateUserCompanyIdToDatabse($company_id)
+    {
+        return DB::table('users')->where('id', Auth::id())->update(['company_id' => $company_id]);
+    }
+
 
 
     /**
@@ -136,6 +205,7 @@ class Settings extends Controller
     }
 
 
+
     /************************* Websites settings *************************/
 
     /**
@@ -145,8 +215,17 @@ class Settings extends Controller
      */
     public function websites()
     {
-        // Get tested domains from the database
-        $domains = $this->getDomainsFromDatabase();
+        $domains = null;
+
+        // Get user datas
+        $user = Auth::user();
+
+        // Get company information from database
+        if ($company = $this->getCompany($user->company_id)) {
+
+            // Get tested domains from the database
+            $domains = $this->getDomainsFromDatabase($company->id);
+        }
 
         return view('frontend/pages/settings/websites', compact('domains'));
     }
@@ -174,8 +253,17 @@ class Settings extends Controller
      */
     public function monitoring()
     {
-        // Get tested domains from the database
-        $domains = $this->getDomainsFromDatabase();
+        $domains = null;
+
+        // Get user datas
+        $user = Auth::user();
+
+        // Get company information from database
+        if ($company = $this->getCompany($user->company_id)) {
+
+            // Get tested domains from the database
+            $domains = $this->getDomainsFromDatabase($company->id);
+        }
 
         return view('frontend/pages/settings/monitoring', compact('domains'));
     }
@@ -204,11 +292,24 @@ class Settings extends Controller
     /**
      * Get domains from databse
      *
+     * @param  int $company_id
      * @return Illuminate\Support\Facades\DB
      */
-    public function getDomainsFromDatabase()
+    public function getDomainsFromDatabase($company_id)
     {
-        return DB::table('sites')->get();
+        return DB::table('sites')->where('company_id', $company_id)->get();
+    }
+
+
+    /**
+     * Get company datas from database
+     *
+     * @param  $company_id
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function getCompany($company_id)
+    {
+        return DB::table('company')->where('id', $company_id)->first();
     }
 
 

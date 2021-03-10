@@ -17,7 +17,7 @@ class CreateSitesTable extends Migration
             $table->id();
             $table->integer('company_id');
             $table->string('location', '100')->nullable();
-            $table->string('site', '100')->unique();
+            $table->string('site', '100');
             $table->boolean('monitoring')->nullable();
             $table->string('gt_id', '20')->nullable();
             $table->string('poll_state_url', '200')->nullable();

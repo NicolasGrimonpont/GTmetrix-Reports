@@ -22,8 +22,17 @@ class Reports extends Controller
      */
     public function index()
     {
-        // Get tested domains from the database
-        $domains = $this->getDomainsFromDatabase();
+        // Get user datas
+        $user = Auth::user();
+
+        // Get company information from database
+        if ($company = $this->getCompany($user->company_id)) {
+
+            // Get tested domains from the database
+            $domains = $this->getDomainsFromDatabase($company->id);
+        }
+
+
 
         return view('frontend/pages/reports', compact('domains'));
     }
@@ -37,21 +46,22 @@ class Reports extends Controller
      */
     public function upload(Request $request)
     {
+        // Get user datas
         $user = Auth::user();
 
-        // Get API credentials from database
+        // Get company information from database
         if ($company = $this->getCompany($user->company_id)) {
+
+            // Check if datas for API are empty
+            if (empty($company->gt_email) || empty($company->gt_api)) {
+                return response()->json(['error' => 'Issue with API credentials, please verify your credentials on your company']);
+            }
 
             // Decrypt GTmetrix API key
             if (!$company->gt_api = $this->decryptApiKey($company->gt_api)) {
                 Log::error("Error decrypting the API key");
                 return response()->json(['error' => 'Issue with API credentials, please contact an admin']);
             }
-        }
-
-        // Check if datas for API are empty
-        if (empty($company->gt_email) || empty($company->gt_api)) {
-            return response()->json(['error' => 'Issue with API credentials, please verify your credentials on settings']);
         }
 
         // File validation
@@ -115,11 +125,12 @@ class Reports extends Controller
     /**
      * Get domains from databse
      *
+     * @param  int $company_id
      * @return Illuminate\Support\Facades\DB
      */
-    public function getDomainsFromDatabase()
+    public function getDomainsFromDatabase($company_id)
     {
-        return DB::table('sites')->get();
+        return DB::table('sites')->where('company_id', $company_id)->get();
     }
 
 
@@ -175,10 +186,10 @@ class Reports extends Controller
 
         return DB::table('sites')->updateOrInsert(
             [
-                'site' => trim($site)
+                'site' => trim($site),
+                'company_id' => $company_id
             ],
             [
-                'company_id' => $company_id,
                 'gt_id' => is_null($result->getId()),
                 'poll_state_url' => $result->getpollStateUrl(),
                 'state' => $result->getstate(),

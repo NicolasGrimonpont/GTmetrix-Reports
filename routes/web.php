@@ -40,7 +40,7 @@ Route::get('/settings/websites', [Settings::class, 'websites'])->middleware(['au
 Route::get('/settings/monitoring', [Settings::class, 'monitoring'])->middleware(['auth'])->name('settings.monitoring');
 Route::post('/settings/monitoring', [Settings::class, 'monitoringFormValidation'])->middleware(['auth']);
 
-Route::get('/settings', [Settings::class, 'settings'])->middleware(['auth'])->middleware(['password.confirm'])->middleware('verified')->name('settings');
+Route::get('/settings', [Settings::class, 'settings'])->middleware(['auth'])->name('settings');
 Route::post('/settings', [Settings::class, 'settingFormValidation'])->middleware(['auth']);
 
 // Cron tasks

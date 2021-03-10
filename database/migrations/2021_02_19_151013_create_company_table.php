@@ -15,7 +15,7 @@ class CreateCompanyTable extends Migration
     {
         Schema::create('company', function (Blueprint $table) {
             $table->id();
-            $table->string('name', '100');
+            $table->string('name', '100')->unique();
             $table->string('gt_email')->nullable();
             $table->string('gt_api')->nullable();
             $table->string('gt_location')->nullable();
