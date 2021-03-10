@@ -25,6 +25,8 @@ class Reports extends Controller
         // Get user datas
         $user = Auth::user();
 
+        $domains = array();
+
         // Get company information from database
         if ($company = $this->getCompany($user->company_id)) {
 
