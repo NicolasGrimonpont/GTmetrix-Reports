@@ -1,7 +1,7 @@
 {{-- Extends layout --}}
 @extends('frontend.layouts.template')
 
-@section('title', 'Monitored')
+@section('title', 'Monitoring')
 
     {{-- Content --}}
 @section('content')

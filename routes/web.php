@@ -26,13 +26,20 @@ Route::get('/', [Home::class, 'index'])->middleware(['auth'])->name('home');
 
 
 // Reports
-Route::get('/report/{id}', [Reports::class, 'index'], function ($company_id) {
+Route::get('/report/{id}', [Reports::class, 'report'], function ($company_id) {
     return 'company_id ' . $company_id;
 })->middleware(['auth'])->name('report');
+
+Route::get('/monitoring/{id}', [Reports::class, 'monitoring'])->middleware(['auth'], function ($site_id) {
+    return 'site_id ' . $site_id;
+});
 
 Route::post('/report/update/{id}', [Reports::class, 'testDomain'])->middleware(['auth'], function ($site_id) {
     return 'site_id ' . $site_id;
 });
+
+
+
 
 
 // Companies

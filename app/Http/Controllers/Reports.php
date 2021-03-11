@@ -13,16 +13,31 @@ use Entrecore\GTMetrixClient\GTMetrixTest;
 class Reports extends Controller
 {
     /**
-     * Show the page
+     * Show the report view
      *
      * @return \Illuminate\View\View
      */
-    public function index($company_id, Request $request)
+    public function report($company_id, Request $request)
     {
         // Get domains from the database
         $domains = $this->getDomainsFromDatabase($company_id);
 
         return view('frontend/pages/reports', compact('domains'));
+    }
+
+
+
+    /**
+     * Show the monitoring view
+     *
+     * @return \Illuminate\View\View
+     */
+    public function monitoring($site_id, Request $request)
+    {
+        // Get domains from the database
+        $domains = $this->getMonitoredWebsiteFromDatabase($site_id);
+
+        return view('frontend/pages/monitoring', compact('domains'));
     }
 
 
@@ -91,19 +106,6 @@ class Reports extends Controller
 
 
     /**
-     * Get domain from databse
-     *
-     * @param  int $id
-     * @return Illuminate\Support\Facades\DB
-     */
-    private function getDomainFromDatabase($id)
-    {
-        return DB::table('sites')->where('id', $id)->first();
-    }
-
-
-
-    /**
      * Get domains from databse
      *
      * @param  int $company_id
@@ -117,6 +119,19 @@ class Reports extends Controller
 
 
     /**
+     * Get domain from databse
+     *
+     * @param  int $id
+     * @return Illuminate\Support\Facades\DB
+     */
+    private function getDomainFromDatabase($id)
+    {
+        return DB::table('sites')->where('id', $id)->first();
+    }
+
+
+
+    /**
      * Get company datas from database
      *
      * @param  $company_id
@@ -125,6 +140,19 @@ class Reports extends Controller
     public function getCompanyFromDatabase($company_id)
     {
         return DB::table('companies')->where('id', $company_id)->first();
+    }
+
+
+
+    /**
+     * Get domains monitored domains for a website
+     *
+     * @param  int $company_id
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function getMonitoredWebsiteFromDatabase($site_id)
+    {
+        return DB::table('monitoring')->where('site_id', $site_id)->get();
     }
 
 
