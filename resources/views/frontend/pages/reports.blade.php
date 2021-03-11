@@ -88,7 +88,7 @@
                                         <td>{{ date('M j, Y', strtotime($domain->updated_at)) }}</td>
                                         <td>
                                             <a href="{{ url('monitoring', $domain->id) }}" class="mr-3"
-                                                data-toggle="tooltip" data-placement="top" title="Monitoring">
+                                                data-toggle="tooltip" data-placement="top" title="Monitoring report">
                                                 <i class="fa fa-line-chart text-muted"></i>
                                             </a>
                                             <a href="#" data-action="test-domain" data-site="{{ $domain->id }}"
