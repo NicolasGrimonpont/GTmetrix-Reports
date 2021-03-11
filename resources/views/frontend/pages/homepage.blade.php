@@ -3,23 +3,37 @@
 
 @section('title', 'Homepage')
 
-{{-- Content --}}
+    {{-- Content --}}
 @section('content')
 
     {{-- Main Content --}}
     <main class="main-content">
 
         <section class="section">
-            <div class="container-fluid">
+            <div class="container">
 
-                <div class="row">
-                    <div class="col-lg-12 mx-auto text-center">
+                <div class="row gap-y">
 
-                        Welcome...
+                    @if ($companies)
 
-                    </div>
+                        @foreach ($companies as $company)
+
+                            <div class="col-md-4">
+                                <div class="card border hover-shadow-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ $company->name }}</h5>
+                                        <p>{{ $company->description }}</p>
+                                        <a class="fs-12 fw-600" href="{{ route('report', $company->id) }}">Show reports <i
+                                                class="fa fa-angle-right pl-1"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        @endforeach
+
+                    @endif
+
                 </div>
-
 
             </div>
         </section>

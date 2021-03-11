@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 
@@ -14,95 +12,62 @@ use Entrecore\GTMetrixClient\GTMetrixTest;
 
 class Reports extends Controller
 {
-
     /**
      * Show the page
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index($company_id, Request $request)
     {
-        // Get user datas
-        $user = Auth::user();
-
-        $domains = array();
-
-        // Get company information from database
-        if ($company = $this->getCompany($user->company_id)) {
-
-            // Get tested domains from the database
-            $domains = $this->getDomainsFromDatabase($company->id);
-        }
-
-
+        // Get domains from the database
+        $domains = $this->getDomainsFromDatabase($company_id);
 
         return view('frontend/pages/reports', compact('domains'));
     }
 
 
+
     /**
-     * Upload a file to get the list of domains
+     * Test domain with GTmetrix API
      *
      * @param  \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function upload(Request $request)
+    public function testDomain($site_id, Request $request)
     {
-        // Get user datas
-        $user = Auth::user();
+        // Get website from database
+        if ($site = $this->getDomainFromDatabase($site_id)) {
 
-        // Get company information from database
-        if ($company = $this->getCompany($user->company_id)) {
+            // Get company information from database
+            if ($company = $this->getCompanyFromDatabase($site->company_id)) {
 
-            // Check if datas for API are empty
-            if (empty($company->gt_email) || empty($company->gt_api)) {
-                return response()->json(['error' => 'Issue with API credentials, please verify your credentials on your company']);
+                // Check if datas for API are empty
+                if (empty($company->gt_email) || empty($company->gt_api)) {
+                    return response()->json('Issue with API credentials, please verify the credentials for this company');
+                }
+
+                // Decrypt GTmetrix API key
+                if (!$company->gt_api = $this->decryptApiKey($company->gt_api)) {
+                    return response()->json('Issue to decrypt the API key, please contact an admin');
+                }
             }
-
-            // Decrypt GTmetrix API key
-            if (!$company->gt_api = $this->decryptApiKey($company->gt_api)) {
-                Log::error("Error decrypting the API key");
-                return response()->json(['error' => 'Issue with API credentials, please contact an admin']);
-            }
-        }
-
-        // File validation
-        $request->validate([
-            'file' => 'required|mimes:txt|max:2048'
-        ]);
-
-        // Get content of file (all domains)
-        $sites = file($request->file('file')->path());
-
-        foreach ($sites as $site) {
 
             // Make gtmetrix call for each domain
-            if ($result = $this->gtmetrixApi($site, $company->gt_email, $company->gt_api)) {
+            if ($result = $this->gtmetrixApi(trim($site->site), $company->gt_email, $company->gt_api)) {
 
                 // Add result datas requested to database
-                if (!$this->addResultToDatabase($site, $company->id, $result)) {
-                    Log::error("Error to record the datas on the database");
-                    return response()->json(['error' => 'Issue with your request']);
+                if (!$this->addResultToDatabase($site->site, $company->id, $result)) {
+
+                    return response()->json('Issue with your request');
                 }
             } else {
-                Log::error("The GTmetrix request don't work properly");
-                return response()->json(['error' => 'Issue when requesting GTmetrix API']);
+                return response()->json('Issue when requesting GTmetrix API');
             }
+            return response()->json('success');
         }
-        return response()->json('success');
+        return response()->json('This website doesn\'t exist');
     }
 
-
-    /**
-     * Get company datas from database
-     *
-     * @param  $company_id
-     * @return Illuminate\Support\Facades\DB
-     */
-    public function getCompany($company_id)
-    {
-        return DB::table('company')->where('id', $company_id)->first();
-    }
 
 
     /**
@@ -124,6 +89,20 @@ class Reports extends Controller
     }
 
 
+
+    /**
+     * Get domain from databse
+     *
+     * @param  int $id
+     * @return Illuminate\Support\Facades\DB
+     */
+    private function getDomainFromDatabase($id)
+    {
+        return DB::table('sites')->where('id', $id)->first();
+    }
+
+
+
     /**
      * Get domains from databse
      *
@@ -134,6 +113,20 @@ class Reports extends Controller
     {
         return DB::table('sites')->where('company_id', $company_id)->get();
     }
+
+
+
+    /**
+     * Get company datas from database
+     *
+     * @param  $company_id
+     * @return Illuminate\Support\Facades\DB
+     */
+    public function getCompanyFromDatabase($company_id)
+    {
+        return DB::table('companies')->where('id', $company_id)->first();
+    }
+
 
 
     /**
@@ -165,9 +158,6 @@ class Reports extends Controller
                 sleep(5);
             }
         } catch (\Throwable $e) {
-
-            // Catch error but continue executing
-            report($e);
             return false;
         }
         return $test;

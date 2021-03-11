@@ -62,7 +62,7 @@ class Cron extends Controller
      */
     public function getCompany($company_id)
     {
-        return DB::table('company')->where('id', $company_id)->first();
+        return DB::table('companies')->where('id', $company_id)->first();
     }
 
 

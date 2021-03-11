@@ -26,6 +26,7 @@ require('datatables.net-buttons/js/buttons.print.js')();  // Print view button
     page.registerVendor('Datatables');
 
     page.initDatatables = function () {
+
         $('[data-provide~="datatables-full"]').each(function () {
 
             // Custom with some options
@@ -47,12 +48,18 @@ require('datatables.net-buttons/js/buttons.print.js')();  // Print view button
                 lengthMenu: [[10, 25, 50, 100, 250, 500, -1], [10, 25, 50, 100, 250, 500, "All"]]
             });
         });
+
         $('[data-provide~="datatables"]').each(function () {
 
             // Custom with some options
             var table = $(this).DataTable({
                 dom: 'frltip',
-                lengthMenu: [[10, 25, 50, 100, 250, 500, -1], [10, 25, 50, 100, 250, 500, "All"]]
+                lengthMenu: [[10, 25, 50, 100, 250, 500, -1], [10, 25, 50, 100, 250, 500, "All"]],
+                fnInfoCallback: function (oSettings) {
+                    if (typeof loadSwitch === "function") {
+                        loadSwitch();
+                    }
+                }
             });
         });
     }

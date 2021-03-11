@@ -1,7 +1,7 @@
 {{-- Extends layout --}}
 @extends('frontend.layouts.template')
 
-@section('title', 'Upload')
+@section('title', 'Monitored')
 
     {{-- Content --}}
 @section('content')
@@ -21,7 +21,7 @@
                                     <th>#</th>
                                     <th>Screenshot</th>
                                     <th>Site</th>
-                                    <th>State</th>
+                                    <th>state</th>
                                     <th>Pagespeed</th>
                                     <th>Yslow</th>
                                     <th>HTML bytes</th>
@@ -42,7 +42,6 @@
                                     <th>Rum speed index</th>
                                     <th>GT report</th>
                                     <th>Updated</th>
-                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,16 +50,12 @@
                                         <th scope="row">{{ $loop->index }}</th>
                                         <td><img src="{{ $domain->screenshot }}"></td>
                                         <td>
-                                            <a href="{{ url('monitoring', $domain->id) }}" title="{{ $domain->site }}">
-                                                {{ mb_strimwidth($domain->site, 0, 70, '...') }}
-                                            </a>
-                                            <a href="{{ $domain->site }}" target="_blank"
-                                                class="ml-3 text-muted vertical-align">
+                                            {{ $domain->site }}
+                                            <a href="{{ $domain->site }}" target="_blank" class="ml-3 text-muted vertical-align">
                                                 <i class="fa fa-external-link" aria-hidden="true"></i>
                                             </a>
                                         </td>
-                                        <td data-toggle="tooltip" data-placement="right" title="{{ $domain->error }}">
-                                            {{ $domain->state }}</td>
+                                        <td data-toggle="tooltip" data-placement="right" title="{{ $domain->error }}">{{ $domain->state }}</td>
                                         <td>{{ $domain->pagespeed_score . ' / 100' }}</td>
                                         <td>{{ $domain->yslow_score . ' / 100' }}</td>
                                         <td>{{ $domain->html_bytes }}</td>
@@ -80,17 +75,11 @@
                                         <td>{{ $domain->fully_loaded_time / 1000 }} s</td>
                                         <td>{{ $domain->rum_speed_index }} s</td>
                                         <td>
-                                            <a href="{{ $domain->report_url }}" target="_blank"
-                                                class="text-muted vertical-align">
+                                            <a href="{{ $domain->report_url }}" target="_blank" class="text-muted vertical-align">
                                                 <i class="fa fa-external-link" aria-hidden="true"></i>
                                             </a>
                                         </td>
                                         <td>{{ date('M j, Y', strtotime($domain->updated_at)) }}</td>
-                                        <td>
-                                            <a href="#" data-action="test-domain" data-site="{{ $domain->id }}">
-                                                <i class="fa fa-refresh text-muted"></i>
-                                            </a>
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -107,31 +96,3 @@
 
 @endsection
 {{-- ./Content --}}
-
-{{-- Scripts --}}
-@section('scripts')
-    <script>
-        $('[data-action="test-domain"]').click(function(e) {
-            e.preventDefault();
-            $.ajax({
-                type: "POST",
-                url: '/report/update/' + $(this).data('site'),
-                beforeSend: function(msg) {
-                    $('#message').text('').hide();
-                    $('#message').text('Testing domain.. Please wait !!').show();
-                },
-                success: function(response) {
-                    if (response) {
-                        location.reload();
-                    }
-                },
-                error: function(response) {
-                    $('#message').text('Error').show();
-                    console.log(response.responseJSON.message);
-                }
-            });
-        });
-
-    </script>
-@endsection
-{{-- ./Scripts --}}

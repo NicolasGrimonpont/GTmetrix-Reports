@@ -21,7 +21,6 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->ipAddress('ip')->nullable();
             $table->boolean('notification')->nullable();
-            $table->tinyInteger('company_id')->nullable();
             $table->tinyInteger('role')->nullable();
             $table->rememberToken();
             $table->timestamps();

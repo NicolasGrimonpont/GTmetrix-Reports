@@ -16,7 +16,8 @@ class CreateMonitoringTable extends Migration
         Schema::create('monitoring', function (Blueprint $table) {
             $table->id();
             $table->integer('site_id');
-            $table->string('site', '100');
+            $table->integer('company_id');
+            $table->string('site');
             $table->string('gt_id', '20')->nullable();
             $table->string('poll_state_url', '200')->nullable();
             $table->string('state', '50')->nullable();

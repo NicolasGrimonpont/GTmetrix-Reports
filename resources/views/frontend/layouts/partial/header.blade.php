@@ -5,26 +5,18 @@
         <div class="navbar-left">
             <button class="navbar-toggler" type="button"><span class="navbar-toggler-icon"></span></button>
             <a class="navbar-brand text-muted fw-600" href="{{ url('/') }}">GTmetrix</a>
-            <span class="navbar-divider"></span>
-
         </div>
 
         <section class="navbar-mobile">
 
-            <nav class="nav nav-navbar mr-auto">
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/') }}"
-                            class="nav-link {{ request()->is('reports') ? 'active' : '' }}">Reports</a>
-                    @endauth
-                @endif
-            </nav>
+            <nav class="nav nav-navbar mr-auto"></nav>
 
             {{-- Login --}}
             @if (Route::has('login'))
                 @auth
-                    @if (request()->is('/'))
-                        <div id="message" class="mr-5"></div>
+                    <div id="message" class="mr-5"></div>
+
+                    @if (Route::is('websites.edit'))
                         <a href="#" class="btn btn-sm btn-round btn-primary mr-4" data-toggle="modal"
                             data-target="#modal">Upload</a>
                     @endif
@@ -50,9 +42,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">Welcome {{ Auth::user()->name }} <span class="arrow"></span></a>
                             <nav class="nav align-right">
-                                <a href="{{ route('settings.company') }}" class="nav-link">Company</a>
-                                <a href="{{ route('settings.websites') }}" class="nav-link">Websites</a>
-                                <a href="{{ route('settings.monitoring') }}" class="nav-link">Monitoring</a>
+                                <a href="{{ route('companies') }}" class="nav-link">Companies</a>
                                 <a href="{{ route('settings') }}" class="nav-link">Settings</a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf

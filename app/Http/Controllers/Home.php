@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class Home extends Controller
 {
@@ -14,6 +14,19 @@ class Home extends Controller
      */
     public function index()
     {
-        return view('frontend/pages/homepage');
+        $companies = $this->getCompaniesFromDatabase();
+
+        return view('frontend/pages/homepage', compact('companies'));
+    }
+
+
+    /**
+     * Get company information from database
+     *
+     * @return Illuminate\Support\Facades\DB
+     */
+    private function getCompaniesFromDatabase()
+    {
+        return DB::table('companies')->get();
     }
 }
