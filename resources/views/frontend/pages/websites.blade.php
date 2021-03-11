@@ -42,9 +42,9 @@
                                     @foreach ($domains as $domain)
                                         <tr>
                                             <td>
-                                                <span title="{{ $domain->site }}">
+                                                <a href="{{ route('monitoring', $domain->id) }}" title="{{ $domain->site }}">
                                                     {{ mb_strimwidth($domain->site, 0, 65, '...') }}
-                                                </span>
+                                                </a>
                                                 <a href="{{ $domain->site }}" target="_blank"
                                                     class="ml-3 text-muted vertical-align">
                                                     <i class="fa fa-external-link" aria-hidden="true"></i>
