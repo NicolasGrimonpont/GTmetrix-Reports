@@ -154,6 +154,7 @@ class Cron extends Controller
                 [
                     'site' => trim($site->site),
                     'site_id' => $site->id,
+                    'company_id' => $site->company_id,
                     'gt_id' => is_null($result->getId()),
                     'poll_state_url' => $result->getpollStateUrl(),
                     'state' => $result->getstate(),
