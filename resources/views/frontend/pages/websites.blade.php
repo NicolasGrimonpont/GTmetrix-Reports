@@ -42,9 +42,9 @@
                                     @foreach ($domains as $domain)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('monitoring', $domain->id) }}" title="{{ $domain->site }}">
+                                                <span title="{{ $domain->site }}">
                                                     {{ mb_strimwidth($domain->site, 0, 65, '...') }}
-                                                </a>
+                                                </span>
                                                 <a href="{{ $domain->site }}" target="_blank"
                                                     class="ml-3 text-muted vertical-align">
                                                     <i class="fa fa-external-link" aria-hidden="true"></i>
@@ -64,6 +64,10 @@
                                                 {{ $domain->state }}</td>
                                             <td>{{ date('M j, Y', strtotime($domain->updated_at)) }}</td>
                                             <td class="w-10 text-center">
+                                                <a href="{{ url('monitoring', $domain->id) }}" class="mr-3"
+                                                    data-toggle="tooltip" data-placement="top" title="Monitoring report">
+                                                    <i class="fa fa-line-chart text-muted"></i>
+                                                </a>
                                                 <a href="{{ route('website.edit', $domain->id) }}" class="mr-3"
                                                     data-toggle="tooltip" data-placement="top" title="Edit">
                                                     <i class="fa fa-pencil text-muted"></i>

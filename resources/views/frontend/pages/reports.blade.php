@@ -51,9 +51,9 @@
                                         <th scope="row">{{ $loop->index }}</th>
                                         <td><img src="{{ $domain->screenshot }}"></td>
                                         <td>
-                                            <a href="{{ url('monitoring', $domain->id) }}" title="{{ $domain->site }}">
+                                            <span title="{{ $domain->site }}">
                                                 {{ mb_strimwidth($domain->site, 0, 70, '...') }}
-                                            </a>
+                                            </span>
                                             <a href="{{ $domain->site }}" target="_blank"
                                                 class="ml-3 text-muted vertical-align">
                                                 <i class="fa fa-external-link" aria-hidden="true"></i>
@@ -87,7 +87,12 @@
                                         </td>
                                         <td>{{ date('M j, Y', strtotime($domain->updated_at)) }}</td>
                                         <td>
-                                            <a href="#" data-action="test-domain" data-site="{{ $domain->id }}">
+                                            <a href="{{ url('monitoring', $domain->id) }}" class="mr-3"
+                                                data-toggle="tooltip" data-placement="top" title="Monitoring">
+                                                <i class="fa fa-line-chart text-muted"></i>
+                                            </a>
+                                            <a href="#" data-action="test-domain" data-site="{{ $domain->id }}"
+                                                data-toggle="tooltip" data-placement="top" title="Run GTmetrix">
                                                 <i class="fa fa-refresh text-muted"></i>
                                             </a>
                                         </td>
