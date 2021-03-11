@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Home;
-use App\Http\Controllers\Monitoring;
 use App\Http\Controllers\Reports;
 use App\Http\Controllers\Settings;
 use App\Http\Controllers\Companies;
@@ -30,16 +29,13 @@ Route::get('/report/{id}', [Reports::class, 'report'], function ($company_id) {
     return 'company_id ' . $company_id;
 })->middleware(['auth'])->name('report');
 
-Route::get('/monitoring/{id}', [Reports::class, 'monitoring'])->middleware(['auth'], function ($site_id) {
+Route::get('/monitoring/{id}', [Reports::class, 'monitoring'], function ($site_id) {
     return 'site_id ' . $site_id;
-});
+})->middleware(['auth'])->name('monitoring');
 
-Route::post('/report/update/{id}', [Reports::class, 'testDomain'])->middleware(['auth'], function ($site_id) {
+Route::post('/report/update/{id}', [Reports::class, 'testDomain'], function ($site_id) {
     return 'site_id ' . $site_id;
-});
-
-
-
+})->middleware(['auth']);
 
 
 // Companies
