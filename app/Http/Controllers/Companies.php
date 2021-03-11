@@ -15,7 +15,7 @@ use Entrecore\GTMetrixClient\GTMetrixClient;
 class Companies extends Controller
 {
     /**
-     * Show the page
+     * Show the companies view
      *
      * @return \Illuminate\View\View
      */
@@ -29,7 +29,7 @@ class Companies extends Controller
 
 
     /**
-     * Create a new company
+     * Show the create a new company
      *
      * @return \Illuminate\View\View
      */
@@ -47,13 +47,6 @@ class Companies extends Controller
      */
     public function companyEdit($id, Request $request)
     {
-        // Create empty  object of company
-        $company = new Settings();
-        $company->gt_email = null;
-        $company->gt_api = null;
-        $company->gt_location = null;
-        $company->gt_config = null;
-
         // Get company datas from databse
         if ($company = $this->getCompanyFromDatabase($id)) {
 
@@ -71,9 +64,10 @@ class Companies extends Controller
             if ($company->gt_email && $company->gt_api) {
                 $company->gt_config = $this->getApiConfig($company->gt_email, $company->gt_api);
             }
-        }
 
-        return view('frontend/pages/company', compact('company'));
+            return view('frontend/pages/company', compact('company'));
+        }
+        abort(404);
     }
 
 
@@ -83,7 +77,7 @@ class Companies extends Controller
      *
      * @return Illuminate\Support\Facades\DB
      */
-    public function getCompanyFromDatabase($id)
+    private function getCompanyFromDatabase($id)
     {
         return DB::table('companies')->where('id', $id)->first();
     }

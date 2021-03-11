@@ -109,8 +109,10 @@
                                     </option>
 
                                     @if (isset($company->gt_config['locations']))
-                                        @foreach ($company->gt_config['locations'] as $id)
-                                            <option value="{{ $id }}">{{ $id }}</option>
+                                        @foreach ($company->gt_config['locations'] as $location)
+                                            <option value="{{ $location->getId() }}"
+                                                {{ $company->gt_location === $location->getId() ? 'selected' : '' }}>
+                                                {{ $location->getName() }}</option>
                                         @endforeach
                                     @endif
 
