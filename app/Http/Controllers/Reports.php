@@ -68,7 +68,7 @@ class Reports extends Controller
             }
 
             // Make gtmetrix call for each domain
-            if ($result = $this->gtmetrixApi(trim($site->site), $company->gt_email, $company->gt_api)) {
+            if ($result = $this->gtmetrixApi(trim($site->site), $company)) {
 
                 // Add result datas requested to database
                 if (!$this->addResultToDatabase($site->site, $company->id, $result)) {
@@ -166,16 +166,16 @@ class Reports extends Controller
      * @return Entrecore\GTMetrixClient\GTMetrixClient
      * @return Entrecore\GTMetrixClient\GTMetrixTest
      */
-    public function gtmetrixApi($site, $gt_email, $gt_api)
+    public function gtmetrixApi($site, $company)
     {
         try {
             $client = new GTMetrixClient();
-            $client->setUsername($gt_email);
-            $client->setAPIKey($gt_api);
+            $client->setUsername($company->gt_email);
+            $client->setAPIKey($company->gt_api);
 
             $client->getLocations();
             $client->getBrowsers();
-            $test = $client->startTest(trim($site), '4');
+            $test = $client->startTest(trim($site), $company->gt_location ?? '4');
 
             //Wait for result
             while (
