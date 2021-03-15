@@ -88,11 +88,11 @@
                                         <td>{{ date('M j, Y', strtotime($domain->updated_at)) }}</td>
                                         <td>
                                             <a href="{{ url('monitoring', $domain->id) }}" class="mr-3"
-                                                data-toggle="tooltip" data-placement="top" title="Monitoring report">
+                                                data-toggle="tooltip" data-placement="top" title="Daily report">
                                                 <i class="fa fa-line-chart @if (!$domain->monitoring) text-muted @endif"></i>
                                             </a>
                                             <a href="#" data-action="test-domain" data-site="{{ $domain->id }}"
-                                                data-toggle="tooltip" data-placement="top" title="Run GTmetrix">
+                                                data-toggle="tooltip" data-placement="top" title="Run GTmetrix test">
                                                 <i class="fa fa-refresh text-muted"></i>
                                             </a>
                                         </td>
