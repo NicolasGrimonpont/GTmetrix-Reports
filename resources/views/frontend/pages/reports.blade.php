@@ -19,8 +19,8 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Screenshot</th>
                                     <th>Site</th>
+                                    <th>Type</th>
                                     <th>State</th>
                                     <th>Pagespeed</th>
                                     <th>Yslow</th>
@@ -42,14 +42,13 @@
                                     <th>Rum speed index</th>
                                     <th>GT report</th>
                                     <th>Updated</th>
-                                    <th></th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($domains as $domain)
                                     <tr>
                                         <th scope="row">{{ $loop->index }}</th>
-                                        <td><img src="{{ $domain->screenshot }}"></td>
                                         <td>
                                             <span title="{{ $domain->site }}">
                                                 {{ mb_strimwidth($domain->site, 0, 70, '...') }}
@@ -59,6 +58,7 @@
                                                 <i class="fa fa-external-link" aria-hidden="true"></i>
                                             </a>
                                         </td>
+                                        <td>{{ $domain->kind }}</td>
                                         <td data-toggle="tooltip" data-placement="right" title="{{ $domain->error }}">
                                             {{ $domain->state }}</td>
                                         <td>{{ $domain->pagespeed_score . ' / 100' }}</td>
@@ -89,7 +89,7 @@
                                         <td>
                                             <a href="{{ url('monitoring', $domain->id) }}" class="mr-3"
                                                 data-toggle="tooltip" data-placement="top" title="Daily report">
-                                                <i class="fa fa-line-chart @if (!$domain->monitoring) text-muted @endif"></i>
+                                                <i class="fa fa-line-chart text-muted"></i>
                                             </a>
                                             <a href="#" data-action="test-domain" data-site="{{ $domain->id }}"
                                                 data-toggle="tooltip" data-placement="top" title="Run GTmetrix test">
