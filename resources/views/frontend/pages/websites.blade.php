@@ -65,10 +65,6 @@
                                                 {{ $domain->state }}</td>
                                             <td>{{ date('M j, Y', strtotime($domain->updated_at)) }}</td>
                                             <td class="w-10 text-center">
-                                                <a href="{{ url('monitoring', $domain->id) }}" class="mr-3"
-                                                    data-toggle="tooltip" data-placement="top" title="Monitoring report">
-                                                    <i class="fa fa-line-chart text-muted"></i>
-                                                </a>
                                                 <a href="{{ route('website.edit', $domain->id) }}" class="mr-3"
                                                     data-toggle="tooltip" data-placement="top" title="Edit">
                                                     <i class="fa fa-pencil text-muted"></i>

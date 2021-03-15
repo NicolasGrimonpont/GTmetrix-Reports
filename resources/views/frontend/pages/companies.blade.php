@@ -51,11 +51,11 @@
                                             </td>
                                             <td class="w-10 text-center">
                                                 <a href="{{ route('websites.edit', $company->id) }}" class="mr-3"
-                                                    data-toggle="tooltip" data-placement="top" title="Websites">
+                                                    data-toggle="tooltip" data-placement="top" title="Edit websites">
                                                     <i class="fa fa-sliders text-muted"></i>
                                                 </a>
                                                 <a href="{{ route('company.edit', $company->id) }}" class="mr-3"
-                                                    data-toggle="tooltip" data-placement="top" title="Edit">
+                                                    data-toggle="tooltip" data-placement="top" title="Edit company">
                                                     <i class="fa fa-pencil text-muted"></i>
                                                 </a>
                                                 <a href="{{ route('company.delete', $company->id) }}"
