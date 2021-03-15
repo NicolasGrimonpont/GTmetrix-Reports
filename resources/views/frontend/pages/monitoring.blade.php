@@ -21,12 +21,11 @@
                 <div class="row">
                     <div class="col-lg-12 mx-auto">
 
-                        <table class="table table-striped" data-provide="datatables-full">
+                        <table class="table table-striped" data-provide="datatables-full-monitoring">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Site</th>
-                                    <th class="d-none"></th>
                                     <th>state</th>
                                     <th>Pagespeed</th>
                                     <th>Yslow</th>
@@ -61,7 +60,6 @@
                                                 <i class="fa fa-external-link" aria-hidden="true"></i>
                                             </a>
                                         </td>
-                                        <td class="d-none"></td>
                                         <td data-toggle="tooltip" data-placement="right" title="{{ $domain->error }}">
                                             {{ $domain->state }}</td>
                                         <td>{{ $domain->pagespeed_score . ' / 100' }}</td>

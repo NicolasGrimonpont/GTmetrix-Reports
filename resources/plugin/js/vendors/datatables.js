@@ -27,6 +27,7 @@ require('datatables.net-buttons/js/buttons.print.js')();  // Print view button
 
     page.initDatatables = function () {
 
+        // Report table
         $('[data-provide~="datatables-full"]').each(function () {
 
             // Custom with some options
@@ -49,6 +50,30 @@ require('datatables.net-buttons/js/buttons.print.js')();  // Print view button
             });
         });
 
+        // Monitoring table
+        $('[data-provide~="datatables-full-monitoring"]').each(function () {
+
+            // Custom with some options
+            var table = $(this).DataTable({
+                dom: 'Bfrltip',
+                buttons: [
+                    {
+                        extend: 'colvis',
+                        text: 'Show Columns'
+                    },
+                    'copy', 'csv', 'print'
+                ],
+                columnDefs: [
+                    {
+                        "targets": [0, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20],
+                        "visible": false
+                    }
+                ],
+                lengthMenu: [[10, 25, 50, 100, 250, 500, -1], [10, 25, 50, 100, 250, 500, "All"]]
+            });
+        });
+
+        // Settings table
         $('[data-provide~="datatables"]').each(function () {
 
             // Custom with some options
