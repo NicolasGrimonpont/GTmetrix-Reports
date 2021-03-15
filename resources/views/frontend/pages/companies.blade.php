@@ -10,7 +10,8 @@
     <header class="header pb-0">
         <div class="container">
             <h1 class="display-4">Companies</h1>
-            <p class="lead-2">Configuration of the companies</p>
+            <p>Companies can be used to group several URLs from different or from the same websites.<br>
+                You will be able to see a report of all the sites you have added to the same company.</p>
             <p><a href="{{ route('company.create') }}">Add a new company</a></p>
         </div>
     </header>
