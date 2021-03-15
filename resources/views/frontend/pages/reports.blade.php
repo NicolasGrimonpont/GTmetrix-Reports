@@ -89,7 +89,7 @@
                                         <td>
                                             <a href="{{ url('monitoring', $domain->id) }}" class="mr-3"
                                                 data-toggle="tooltip" data-placement="top" title="Monitoring report">
-                                                <i class="fa fa-line-chart text-muted"></i>
+                                                <i class="fa fa-line-chart @if (!$domain->monitoring) text-muted @endif"></i>
                                             </a>
                                             <a href="#" data-action="test-domain" data-site="{{ $domain->id }}"
                                                 data-toggle="tooltip" data-placement="top" title="Run GTmetrix">
