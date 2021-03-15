@@ -24,13 +24,13 @@ All other folders and files located in "ressources/plugin" are used to customize
 
 ## Work with assets and ressources
 
-The compilation of resources works with webpack and node manages the tasks. (we don't use gulp or grunt)
+The compilation of resources works with webpack and node manages the tasks. (don't use gulp or grunt)
 
-install frontend dependencies
+Install frontend dependencies
 
     npm install
 
-Run watch task (watch for changes on project and minify in the fly)
+Run watch task (watch for changes on javascript and scss files and compile on the fly)
 
     npm run watch
 
