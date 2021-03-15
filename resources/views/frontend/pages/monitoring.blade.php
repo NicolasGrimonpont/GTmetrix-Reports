@@ -12,6 +12,12 @@
         <section class="section">
             <div class="container-fluid">
 
+                {{-- Header --}}
+                <header class="section-header">
+                    <h2>Daily report</h2>
+                </header>
+                {{-- /.header --}}
+
                 <div class="row">
                     <div class="col-lg-12 mx-auto">
 
@@ -50,12 +56,14 @@
                                         <th scope="row">{{ $loop->index }}</th>
                                         <td>
                                             {{ $domain->site }}
-                                            <a href="{{ $domain->site }}" target="_blank" class="ml-3 text-muted vertical-align">
+                                            <a href="{{ $domain->site }}" target="_blank"
+                                                class="ml-3 text-muted vertical-align">
                                                 <i class="fa fa-external-link" aria-hidden="true"></i>
                                             </a>
                                         </td>
                                         <td class="d-none"></td>
-                                        <td data-toggle="tooltip" data-placement="right" title="{{ $domain->error }}">{{ $domain->state }}</td>
+                                        <td data-toggle="tooltip" data-placement="right" title="{{ $domain->error }}">
+                                            {{ $domain->state }}</td>
                                         <td>{{ $domain->pagespeed_score . ' / 100' }}</td>
                                         <td>{{ $domain->yslow_score . ' / 100' }}</td>
                                         <td>{{ $domain->html_bytes }}</td>
@@ -75,7 +83,8 @@
                                         <td>{{ $domain->fully_loaded_time / 1000 }} s</td>
                                         <td>{{ $domain->rum_speed_index }} s</td>
                                         <td>
-                                            <a href="{{ $domain->report_url }}" target="_blank" class="text-muted vertical-align">
+                                            <a href="{{ $domain->report_url }}" target="_blank"
+                                                class="text-muted vertical-align">
                                                 <i class="fa fa-external-link" aria-hidden="true"></i>
                                             </a>
                                         </td>

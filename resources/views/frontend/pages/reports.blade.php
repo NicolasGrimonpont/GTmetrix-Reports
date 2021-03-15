@@ -12,6 +12,13 @@
         <section class="section">
             <div class="container-fluid">
 
+                {{-- Header --}}
+                <header class="section-header">
+                    <h2>{{ $company->name }}</h2>
+                    <p>{{ $company->description }}</p>
+                </header>
+                {{-- /.header --}}
+
                 <div class="row">
                     <div class="col-lg-12 mx-auto">
 
@@ -88,7 +95,8 @@
                                         <td>{{ date('M j, Y', strtotime($domain->updated_at)) }}</td>
                                         <td>
                                             <a href="{{ url('monitoring', $domain->id) }}" class="mr-3"
-                                                data-toggle="tooltip" data-placement="top" title="Daily report">
+                                                data-toggle="tooltip" data-placement="top"
+                                                title="Daily report (monitoring is @if ($domain->monitoring) activated @else disabled @endif)">
                                                 <i class="fa fa-line-chart text-muted"></i>
                                             </a>
                                             <a href="#" data-action="test-domain" data-site="{{ $domain->id }}"

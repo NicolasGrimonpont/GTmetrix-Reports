@@ -22,7 +22,10 @@ class Reports extends Controller
         // Get domains from the database
         $domains = $this->getDomainsFromDatabase($company_id);
 
-        return view('frontend/pages/reports', compact('domains'));
+        // Get company datas from database
+        $company = $this->getCompanyFromDatabase($company_id);
+
+        return view('frontend/pages/reports', compact('domains', 'company'));
     }
 
 
