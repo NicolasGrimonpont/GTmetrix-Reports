@@ -60,7 +60,7 @@ class Cron extends Controller
      *
      * @return Illuminate\Support\Facades\DB
      */
-    public function getCompany($company_id)
+    private function getCompany($company_id)
     {
         return DB::table('companies')->where('id', $company_id)->first();
     }
@@ -73,7 +73,7 @@ class Cron extends Controller
      * @param  $gt_api encrypted
      * @return $api_key decrypted
      */
-    public function decryptApiKey($gt_api)
+    private function decryptApiKey($gt_api)
     {
         try {
             $gt_api = Crypt::decryptString($gt_api);
@@ -92,7 +92,7 @@ class Cron extends Controller
      *
      * @return Illuminate\Support\Facades\DB
      */
-    public function getMonitoredDomains()
+    private function getMonitoredDomains()
     {
         return DB::table('sites')->where('monitoring', true)->get();
     }
@@ -108,7 +108,7 @@ class Cron extends Controller
      * @return Entrecore\GTMetrixClient\GTMetrixClient
      * @return Entrecore\GTMetrixClient\GTMetrixTest
      */
-    public function gtmetrixApi($site, $company)
+    private function gtmetrixApi($site, $company)
     {
         try {
             $client = new GTMetrixClient();
@@ -145,7 +145,7 @@ class Cron extends Controller
      * @param  Entrecore\GTMetrixClient\GTMetrixClient  $result
      * @return Illuminate\Support\Facades\DB
      */
-    public function addResultToDatabase($site, $result)
+    private function addResultToDatabase($site, $result)
     {
         $ressources = $result->getResources();
 
