@@ -19,8 +19,8 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Screenshot</th>
                                     <th>Site</th>
+                                    <th class="d-none"></th>
                                     <th>state</th>
                                     <th>Pagespeed</th>
                                     <th>Yslow</th>
@@ -48,13 +48,13 @@
                                 @foreach ($domains as $domain)
                                     <tr>
                                         <th scope="row">{{ $loop->index }}</th>
-                                        <td><img src="{{ $domain->screenshot }}"></td>
                                         <td>
                                             {{ $domain->site }}
                                             <a href="{{ $domain->site }}" target="_blank" class="ml-3 text-muted vertical-align">
                                                 <i class="fa fa-external-link" aria-hidden="true"></i>
                                             </a>
                                         </td>
+                                        <td class="d-none"></td>
                                         <td data-toggle="tooltip" data-placement="right" title="{{ $domain->error }}">{{ $domain->state }}</td>
                                         <td>{{ $domain->pagespeed_score . ' / 100' }}</td>
                                         <td>{{ $domain->yslow_score . ' / 100' }}</td>

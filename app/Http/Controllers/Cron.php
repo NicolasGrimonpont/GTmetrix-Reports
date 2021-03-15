@@ -37,9 +37,14 @@ class Cron extends Controller
                             // Make gtmetrix call for this domain
                             if ($result = $this->gtmetrixApi($site, $company)) {
 
-                                // Add result datas requested to database
-                                if (!$this->addResultToDatabase($site, $result)) {
-                                    Log::error("Cron task: Error to record the datas on the database");
+                                // Add result datas to monitoring database
+                                if (!$this->addResultToMonitoringDatabase($site, $result)) {
+                                    Log::error("Cron task: Error to record the datas on the monitoring database");
+                                }
+
+                                // Update result datas to sites database
+                                if (!$this->updateResultToSitesDatabase($site, $result)) {
+                                    Log::error("Cron task: Error to record the datas on the website database");
                                 }
                             } else {
                                 Log::error("Cron task: The GTmetrix request don't work properly");
@@ -145,7 +150,7 @@ class Cron extends Controller
      * @param  Entrecore\GTMetrixClient\GTMetrixClient  $result
      * @return Illuminate\Support\Facades\DB
      */
-    private function addResultToDatabase($site, $result)
+    private function addResultToMonitoringDatabase($site, $result)
     {
         $ressources = $result->getResources();
 
@@ -155,6 +160,56 @@ class Cron extends Controller
                     'site' => trim($site->site),
                     'site_id' => $site->id,
                     'company_id' => $site->company_id,
+                    'gt_id' => is_null($result->getId()),
+                    'poll_state_url' => $result->getpollStateUrl(),
+                    'state' => $result->getstate(),
+                    'error' => (!empty($result->getError())) ? $result->getError() : null,
+                    'report_url' => $result->getreportUrl(),
+                    'pagespeed_score' => $result->getpagespeedScore(),
+                    'yslow_score' => $result->getyslowScore(),
+                    'html_bytes' => $result->gethtmlBytes(),
+                    'html_load_time' => $result->gethtmlLoadTime(),
+                    'page_bytes' => $result->getpageBytes(),
+                    'page_load_time' => $result->getpageLoadTime(),
+                    'page_elements' => $result->getpageElements(),
+                    'redirect_duration' => $result->getredirectDuration(),
+                    'connect_duration' => $result->getconnectDuration(),
+                    'backend_duration' => $result->getbackendDuration(),
+                    'first_paint_time' => $result->getfirstPaintTime(),
+                    'dom_interactive_time' => $result->getdomInteractiveTime(),
+                    'dom_content_loaded_time' => $result->getdomInteractiveTime(),
+                    'dom_content_loaded_duration' => $result->getdomContentLoadedDuration(),
+                    'onload_time' => $result->getonloadTime(),
+                    'onload_duration' => $result->getonloadDuration(),
+                    'fully_loaded_time' => $result->getfullyLoadedTime(),
+                    'rum_speed_index' => $result->getrumSpeedIndex(),
+                    'report_pdf' => (!empty($ressources)) ? $ressources['report_pdf'] : null,
+                    'pagespeed' => (!empty($ressources)) ? $ressources['pagespeed'] : null,
+                    'har' => (!empty($ressources)) ? $ressources['har'] : null,
+                    'pagespeed_files' => (!empty($ressources)) ? $ressources['pagespeed_files'] : null,
+                    'report_pdf_full' => (!empty($ressources)) ? $ressources['report_pdf_full'] : null,
+                    'yslow' => (!empty($ressources)) ? $ressources['yslow'] : null,
+                    'screenshot' => (!empty($ressources)) ? $ressources['screenshot'] : null,
+                    'updated_at' => \Carbon\Carbon::now()
+                ]
+            );
+    }
+
+    /**
+     * Add result to database
+     *
+     * @param  \Illuminate\Http\Request  $site
+     * @param  Entrecore\GTMetrixClient\GTMetrixClient  $result
+     * @return Illuminate\Support\Facades\DB
+     */
+    private function updateResultToSitesDatabase($site, $result)
+    {
+        $ressources = $result->getResources();
+
+        return DB::table('sites')
+        ->where('id', $site->id)
+            ->update(
+                [
                     'gt_id' => is_null($result->getId()),
                     'poll_state_url' => $result->getpollStateUrl(),
                     'state' => $result->getstate(),
