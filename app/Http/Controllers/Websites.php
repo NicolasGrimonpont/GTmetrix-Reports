@@ -19,7 +19,10 @@ class Websites extends Controller
         // Get tested domains from the database
         $domains = $this->getDomainsFromDatabase($company_id);
 
-        return view('frontend/pages/websites', compact('domains', 'company_id'));
+        // Get company information from database
+        $company = $this->getCompanyFromDatabase($company_id);
+
+        return view('frontend/pages/websites', compact('domains', 'company'));
     }
 
 
@@ -196,6 +199,18 @@ class Websites extends Controller
             $result['error'] = $th->getMessage();
         }
         return $result;
+    }
+
+
+
+    /**
+     * Get company information from database
+     *
+     * @return Illuminate\Support\Facades\DB
+     */
+    private function getCompanyFromDatabase($id)
+    {
+        return DB::table('companies')->where('id', $id)->first();
     }
 
 

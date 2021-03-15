@@ -9,9 +9,10 @@
     {{-- Header --}}
     <header class="header pb-0">
         <div class="container">
-            <h1 class="display-4">Websites</h1>
-            <p class="lead-2">Configuration of websites of the company</p>
-            <p><a href="{{ route('website.add', $company_id) }}">Add a new website</a></p>
+            <h1 class="display-4">Websites for {{ $company->name }}</h1>
+            <p>Add new websites or different urls of the same website in this company.<br>
+                This will generate a specific report for all these urls.</p>
+            <p><a href="{{ route('website.add', $company->id) }}">Add a new website</a></p>
         </div>
     </header>
     {{-- /.header --}}
